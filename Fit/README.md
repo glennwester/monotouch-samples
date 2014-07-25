@@ -16,4 +16,4 @@ Author
 ======
 Copyright (C) 2014 Apple Inc. All rights reserved.
 
-Ported to Xamarin.iOS by Oleg Demchenko
+Ported to Xamarin.iOS by Oleg Demchenko and Timothy Risi
