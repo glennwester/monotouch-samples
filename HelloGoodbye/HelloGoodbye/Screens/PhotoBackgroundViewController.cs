@@ -5,7 +5,7 @@ using System.Drawing;
 
 namespace HelloGoodbye
 {
-	public class AAPLPhotoBackgroundViewController : UIViewController
+	public class PhotoBackgroundViewController : UIViewController
 	{
 		private UIImageView _backgroundView;
 		private UIView _containerView;
@@ -17,7 +17,7 @@ namespace HelloGoodbye
 			}
 			set {
 				if (value == null)
-					throw new ArgumentNullException ();
+					throw new ArgumentNullException ("value");
 
 				_backgroundImage = value;
 
@@ -26,7 +26,7 @@ namespace HelloGoodbye
 			}
 		}
 
-		public AAPLPhotoBackgroundViewController ()
+		public PhotoBackgroundViewController ()
 		{
 		}
 

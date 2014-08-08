@@ -8,38 +8,38 @@ using MonoTouch.ObjCRuntime;
 
 namespace HelloGoodbye
 {
-	public class AAPLMatchesViewController : AAPLPhotoBackgroundViewController
+	public class MatchesViewController : PhotoBackgroundViewController
 	{
-		private const float AAPLHelloGoodbyeVerticalMargin = 5f;
-		private const float AAPLSwipeAnimationDuration = 0.5f;
-		private const float AAPLZoomAnimationDuration = 0.3f;
-		private const float AAPLFadeAnimationDuration = 0.3f;
+		private const float HelloGoodbyeVerticalMargin = 5f;
+		private const float SwipeAnimationDuration = 0.5f;
+		private const float ZoomAnimationDuration = 0.3f;
+		private const float FadeAnimationDuration = 0.3f;
 
-		private AAPLCardView _cardView;
+		private CardView _cardView;
 		private UIView _swipeInstructionsView;
 		private UIView _allMatchesViewedExplanatoryView;
 
 		private NSLayoutConstraint[] _cardViewVerticalConstraints;
 
-		private List<AAPLPerson> _matches;
+		private List<Person> _matches;
 		private int _currentMatchIndex;
 
-		private AAPLPerson CurrentMatch {
+		private Person CurrentMatch {
 			get {
 				return _currentMatchIndex < _matches.Count ? _matches [_currentMatchIndex] : null;
 			}
 		}
 
-		public AAPLMatchesViewController ()
+		public MatchesViewController ()
 		{
 			string path = NSBundle.MainBundle.PathForResource ("matches", "plist");
 			NSArray serializedMatches = NSArray.FromFile (path);
 
-			var matches = new List<AAPLPerson> ();
+			var matches = new List<Person> ();
 
 			for (int i = 0; i < serializedMatches.Count; i++) {
 				var sMatch = serializedMatches.GetItem<NSDictionary> (i);
-				AAPLPerson match = AAPLPerson.PersonFromDictionary (sMatch);
+				Person match = Person.PersonFromDictionary (sMatch);
 				matches.Add (match);
 			}
 
@@ -63,13 +63,13 @@ namespace HelloGoodbye
 			UIView dummyView = AddDummyViewToContainerView (containerView, _swipeInstructionsView, BottomLayoutGuide, constraints);
 
 			// Create and add the card
-			AAPLCardView cardView = AddCardViewToView (containerView);
+			CardView cardView = AddCardViewToView (containerView);
 
 			// Define the vertical positioning of the card
 			// These constraints will be removed when the card animates off screen
 			_cardViewVerticalConstraints = new NSLayoutConstraint[] {
 				NSLayoutConstraint.Create (cardView, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, dummyView, NSLayoutAttribute.CenterY, 1f, 0f),
-				NSLayoutConstraint.Create (cardView, NSLayoutAttribute.Top, NSLayoutRelation.GreaterThanOrEqual, _swipeInstructionsView, NSLayoutAttribute.Bottom, 1f, AAPLHelloGoodbyeVerticalMargin)
+				NSLayoutConstraint.Create (cardView, NSLayoutAttribute.Top, NSLayoutRelation.GreaterThanOrEqual, _swipeInstructionsView, NSLayoutAttribute.Bottom, 1f, HelloGoodbyeVerticalMargin)
 			};
 			constraints.AddRange (_cardViewVerticalConstraints);
 
@@ -103,10 +103,10 @@ namespace HelloGoodbye
 			return dummyView;
 		}
 
-		private AAPLCardView AddCardViewToView(UIView containerView)
+		private CardView AddCardViewToView(UIView containerView)
 		{
-			AAPLCardView cardView = new AAPLCardView ();
-			cardView.UpdateWithPerson (CurrentMatch);
+			CardView cardView = new CardView ();
+			cardView.Update (CurrentMatch);
 			cardView.TranslatesAutoresizingMaskIntoConstraints = false;
 			_cardView = cardView;
 			containerView.AddSubview (cardView);
@@ -120,10 +120,10 @@ namespace HelloGoodbye
 			cardView.AddGestureRecognizer (swipeDownRecognizer);
 
 			string sayHelloName = "Say hello".LocalizedString (@"Accessibility action to say hello");
-			UIAccessibilityCustomAction helloAction = new UIAccessibilityCustomAction (sayHelloName, this, new Selector ("sayHello"));
+			UIAccessibilityCustomAction helloAction = new UIAccessibilityCustomAction (sayHelloName, SayHello);
 
 			string sayGoodbyeName = "Say goodbye".LocalizedString ("Accessibility action to say goodbye");
-			UIAccessibilityCustomAction goodbyeAction = new UIAccessibilityCustomAction (sayGoodbyeName, this, new Selector ("sayGoodbye"));
+			UIAccessibilityCustomAction goodbyeAction = new UIAccessibilityCustomAction (sayGoodbyeName, SayGoodbye);
 
 			UIView[] elements = NSArray.FromArray<UIView> ((NSArray)cardView.GetAccessibilityElements ());
 			foreach (UIView element in elements)
@@ -152,8 +152,8 @@ namespace HelloGoodbye
 			// This view will become visible once all matches have been viewed
 			overlayView.Alpha = 0f;
 
-			UILabel label = AAPLStyleUtilities.CreateStandardLabel ();
-			label.Font = AAPLStyleUtilities.LargeFont;
+			UILabel label = StyleUtilities.CreateStandardLabel ();
+			label.Font = StyleUtilities.LargeFont;
 			label.Text = "Stay tuned for more matches!".LocalizedString ("Shown when all matches have been viewed");
 			overlayView.AddSubview (label);
 
@@ -162,36 +162,34 @@ namespace HelloGoodbye
 			constraints.Add (NSLayoutConstraint.Create (overlayView, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, containerView, NSLayoutAttribute.CenterY, 1f, 0f));
 
 			// Position the label in the overlay view
-			constraints.Add (NSLayoutConstraint.Create (label, NSLayoutAttribute.Top, NSLayoutRelation.Equal, overlayView, NSLayoutAttribute.Top, 1f, AAPLStyleUtilities.ContentVerticalMargin));
-			constraints.Add (NSLayoutConstraint.Create (label, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, overlayView, NSLayoutAttribute.Bottom, 1f, -1 * AAPLStyleUtilities.ContentVerticalMargin));
-			constraints.Add (NSLayoutConstraint.Create (label, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, overlayView, NSLayoutAttribute.Leading, 1f, AAPLStyleUtilities.ContentHorizontalMargin));
-			constraints.Add (NSLayoutConstraint.Create (label, NSLayoutAttribute.Trailing, NSLayoutRelation.Equal, overlayView, NSLayoutAttribute.Trailing, 1f, -1 * AAPLStyleUtilities.ContentHorizontalMargin));
+			constraints.Add (NSLayoutConstraint.Create (label, NSLayoutAttribute.Top, NSLayoutRelation.Equal, overlayView, NSLayoutAttribute.Top, 1f, StyleUtilities.ContentVerticalMargin));
+			constraints.Add (NSLayoutConstraint.Create (label, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, overlayView, NSLayoutAttribute.Bottom, 1f, -1 * StyleUtilities.ContentVerticalMargin));
+			constraints.Add (NSLayoutConstraint.Create (label, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, overlayView, NSLayoutAttribute.Leading, 1f, StyleUtilities.ContentHorizontalMargin));
+			constraints.Add (NSLayoutConstraint.Create (label, NSLayoutAttribute.Trailing, NSLayoutRelation.Equal, overlayView, NSLayoutAttribute.Trailing, 1f, -1 * StyleUtilities.ContentHorizontalMargin));
 
 			return overlayView;
 		}
 
-		[Export("sayHello")]
-		private bool SayHello()
+		// TODO: should return bool https://trello.com/c/qVOKpvpg
+		private void SayHello()
 		{
 			AnimateCardsForHello (true);
-			return true;
 		}
 
-		[Export("sayGoodbye")]
-		private bool SayGoodbye()
+		// TODO: should return bool https://trello.com/c/qVOKpvpg
+		private void SayGoodbye()
 		{
 			AnimateCardsForHello (false);
-			return true;
 		}
 
 		private void AnimateCardsForHello(bool forHello)
 		{
 			AnimateCardOffScreenToTop (forHello, () => {
 				_currentMatchIndex++;
-				AAPLPerson nextMatch = CurrentMatch;
+				Person nextMatch = CurrentMatch;
 				if (nextMatch != null) {
 					// Show the next match's profile in the card
-					_cardView.UpdateWithPerson (nextMatch);
+					_cardView.Update (nextMatch);
 
 					// Ensure that the view's layout is up to date before we animate it
 					View.LayoutIfNeeded ();
@@ -208,7 +206,7 @@ namespace HelloGoodbye
 					_cardView.Hidden = true;
 
 					// Fade in the "Stay tuned for more matches" blurb
-					UIView.Animate (AAPLFadeAnimationDuration, () => {
+					UIView.Animate (FadeAnimationDuration, () => {
 						_swipeInstructionsView.Alpha = 0f;
 						_allMatchesViewedExplanatoryView.Alpha = 1f;
 					});
@@ -221,7 +219,7 @@ namespace HelloGoodbye
 		private void FadeCardIntoView()
 		{
 			_cardView.Alpha = 0f;
-			UIView.Animate (AAPLFadeAnimationDuration, () => {
+			UIView.Animate (FadeAnimationDuration, () => {
 				_cardView.Alpha = 1f;
 			});
 		}
@@ -229,7 +227,7 @@ namespace HelloGoodbye
 		private void ZoomCardIntoView()
 		{
 			_cardView.Transform = CGAffineTransform.MakeScale(0f, 0f);
-			UIView.Animate (AAPLZoomAnimationDuration, () => {
+			UIView.Animate (ZoomAnimationDuration, () => {
 				_cardView.Transform = CGAffineTransform.MakeIdentity ();
 			});
 		}
@@ -244,7 +242,7 @@ namespace HelloGoodbye
 
 			View.LayoutIfNeeded ();
 
-			UIView.Animate (AAPLSwipeAnimationDuration, () => {
+			UIView.Animate (SwipeAnimationDuration, () => {
 				// Slide the card off screen
 				View.RemoveConstraints (_cardViewVerticalConstraints);
 				View.AddConstraint (offScreenConstraint);
@@ -263,22 +261,22 @@ namespace HelloGoodbye
 		{
 			UIView overlayView = AddOverlayViewToContainerView (containerView);
 
-			UILabel swipeInstructionsLabel = AAPLStyleUtilities.CreateStandardLabel ();
-			swipeInstructionsLabel.Font = AAPLStyleUtilities.LargeFont;
+			UILabel swipeInstructionsLabel = StyleUtilities.CreateStandardLabel ();
+			swipeInstructionsLabel.Font = StyleUtilities.LargeFont;
 			overlayView.AddSubview (swipeInstructionsLabel);
 			swipeInstructionsLabel.Text = "Swipe ↑ to say \"Hello!\"\nSwipe ↓ to say \"Goodbye...\"".LocalizedString ("Instructions for the Matches page");
 			swipeInstructionsLabel.AccessibilityLabel = "Swipe up to say \"Hello!\"\nSwipe down to say \"Goodbye\"".LocalizedString ("Accessibility instructions for the Matches page");
 
-			float overlayMargin = AAPLStyleUtilities.OverlayMargin;
+			float overlayMargin = StyleUtilities.OverlayMargin;
 			NSLayoutConstraint topMarginConstraint = NSLayoutConstraint.Create(overlayView, NSLayoutAttribute.Top, NSLayoutRelation.Equal, TopLayoutGuide, NSLayoutAttribute.Bottom, 1f, overlayMargin);
 			float priority = (int)UILayoutPriority.Required - 1;
 			topMarginConstraint.Priority = priority;
 			constraints.Add (topMarginConstraint);
 
 			// Position the label inside the overlay view
-			constraints.Add (NSLayoutConstraint.Create (swipeInstructionsLabel, NSLayoutAttribute.Top, NSLayoutRelation.Equal, overlayView, NSLayoutAttribute.Top, 1f, AAPLHelloGoodbyeVerticalMargin));
+			constraints.Add (NSLayoutConstraint.Create (swipeInstructionsLabel, NSLayoutAttribute.Top, NSLayoutRelation.Equal, overlayView, NSLayoutAttribute.Top, 1f, HelloGoodbyeVerticalMargin));
 			constraints.Add (NSLayoutConstraint.Create (swipeInstructionsLabel, NSLayoutAttribute.CenterX, NSLayoutRelation.Equal, overlayView, NSLayoutAttribute.CenterX, 1f, 0f));
-			constraints.Add (NSLayoutConstraint.Create (overlayView, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, swipeInstructionsLabel, NSLayoutAttribute.Bottom, 1f, AAPLHelloGoodbyeVerticalMargin));
+			constraints.Add (NSLayoutConstraint.Create (overlayView, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, swipeInstructionsLabel, NSLayoutAttribute.Bottom, 1f, HelloGoodbyeVerticalMargin));
 
 			// Center the overlay view horizontally
 			constraints.Add (NSLayoutConstraint.Create (overlayView, NSLayoutAttribute.Left, NSLayoutRelation.Equal, containerView, NSLayoutAttribute.Left, 1f, overlayMargin));
@@ -290,10 +288,10 @@ namespace HelloGoodbye
 		private UIView AddOverlayViewToContainerView(UIView containerView)
 		{
 			UIView overlayView = new UIView {
-				BackgroundColor = AAPLStyleUtilities.OverlayColor,
+				BackgroundColor = StyleUtilities.OverlayColor,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
-			overlayView.Layer.CornerRadius = AAPLStyleUtilities.OverlayCornerRadius;
+			overlayView.Layer.CornerRadius = StyleUtilities.OverlayCornerRadius;
 			containerView.AddSubview(overlayView);
 
 			return overlayView;

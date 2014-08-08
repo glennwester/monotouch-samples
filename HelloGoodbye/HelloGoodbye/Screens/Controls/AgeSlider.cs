@@ -6,7 +6,7 @@ using MonoTouch.Foundation;
 
 namespace HelloGoodbye
 {
-	public class AAPLAgeSlider : UISlider
+	public class AgeSlider : UISlider
 	{
 		public override string AccessibilityValue {
 			get {
@@ -19,9 +19,9 @@ namespace HelloGoodbye
 			}
 		}
 
-		public AAPLAgeSlider()
+		public AgeSlider()
 		{
-			TintColor = AAPLStyleUtilities.ForegroundColor;
+			TintColor = StyleUtilities.ForegroundColor;
 			MinValue = 18;
 			MaxValue = 120;
 		}

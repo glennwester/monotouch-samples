@@ -11,16 +11,16 @@ namespace HelloGoodbye
 	public partial class AppDelegate : UIApplicationDelegate
 	{
 		private UIWindow _window;
-		private AAPLStartViewController _startViewController;
+		private StartViewController _startViewController;
 		private UINavigationController _navigationController;
 
 		public override bool FinishedLaunching (UIApplication app, NSDictionary options)
 		{
 			_window = new UIWindow (UIScreen.MainScreen.Bounds);
 
-			_startViewController = new AAPLStartViewController ();
+			_startViewController = new StartViewController ();
 			_navigationController = new UINavigationController (_startViewController);
-			_navigationController.NavigationBar.TintColor = AAPLStyleUtilities.ForegroundColor;
+			_navigationController.NavigationBar.TintColor = StyleUtilities.ForegroundColor;
 
 			_window.RootViewController = _navigationController;
 

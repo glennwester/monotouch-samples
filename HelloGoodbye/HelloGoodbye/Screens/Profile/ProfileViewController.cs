@@ -10,22 +10,22 @@ using System.Drawing;
 
 namespace HelloGoodbye
 {
-	public class AAPLProfileViewController : AAPLPhotoBackgroundViewController
+	public class ProfileViewController : PhotoBackgroundViewController
 	{
-		private const float AAPLLabelControlMinimumSpacing = 20;
-		private const float AAPLMinimumVerticalSpacingBetweenRows = 20;
-		private const float AAPLPreviewTabMinimumWidth = 80;
-		private const float AAPLPreviewTabHeight = 30;
-		private const float AAPLPreviewTabCornerRadius = 10;
-		private const float AAPLPreviewTabHorizontalPadding = 30;
-		private const float AAPLCardRevealAnimationDuration = 0.3f;
+		private const float LabelControlMinimumSpacing = 20;
+		private const float MinimumVerticalSpacingBetweenRows = 20;
+		private const float PreviewTabMinimumWidth = 80;
+		private const float PreviewTabHeight = 30;
+		private const float PreviewTabCornerRadius = 10;
+		private const float PreviewTabHorizontalPadding = 30;
+		private const float CardRevealAnimationDuration = 0.3f;
 
-		private AAPLPerson _person;
+		private Person _person;
 		private UILabel _ageValueLabel;
 		private UITextField _hobbiesField;
 		private UITextField _elevatorPitchField;
 		private UIImageView _previewTab;
-		private AAPLCardView _cardView;
+		private CardView _cardView;
 		private NSLayoutConstraint _cardRevealConstraint;
 		private bool _cardWasRevealedBeforePan;
 
@@ -41,13 +41,13 @@ namespace HelloGoodbye
 			}
 		}
 
-		public AAPLProfileViewController ()
+		public ProfileViewController ()
 		{
 			Title = @"Profile".LocalizedString("Title of the profile page");
 			BackgroundImage = UIImage.FromBundle ("girl-bg.jpg");
 
 			// Create the model.  If we had a backing service, this model would pull data from the user's account settings.
-			_person = new AAPLPerson {
+			_person = new Person {
 				Photo = UIImage.FromBundle("girl.jpg"),
 				Age = 37,
 				Hobbies = "Music, swing dance, wine",
@@ -74,15 +74,15 @@ namespace HelloGoodbye
 		private UIView AddOverlayViewToView (UIView containerView, List<NSLayoutConstraint> constraints)
 		{
 			UIView overlayView = new UIView {
-				BackgroundColor = AAPLStyleUtilities.OverlayColor,
+				BackgroundColor = StyleUtilities.OverlayColor,
 				TranslatesAutoresizingMaskIntoConstraints = false
 			};
-			overlayView.Layer.CornerRadius = AAPLStyleUtilities.OverlayCornerRadius;
+			overlayView.Layer.CornerRadius = StyleUtilities.OverlayCornerRadius;
 
 			containerView.AddSubview (overlayView);
 
 			// Cover the view controller with the overlay, leaving a margin on all sides
-			float margin = AAPLStyleUtilities.OverlayMargin;
+			float margin = StyleUtilities.OverlayMargin;
 			constraints.Add(NSLayoutConstraint.Create(overlayView, NSLayoutAttribute.Top, NSLayoutRelation.Equal, TopLayoutGuide, NSLayoutAttribute.Bottom, 1f, margin));
 			constraints.Add(NSLayoutConstraint.Create(overlayView, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, BottomLayoutGuide, NSLayoutAttribute.Bottom, 1f,  -margin));
 			constraints.Add (NSLayoutConstraint.Create (overlayView, NSLayoutAttribute.Left, NSLayoutRelation.Equal, containerView, NSLayoutAttribute.Left, 1f, margin));
@@ -92,17 +92,17 @@ namespace HelloGoodbye
 
 		private UITextField AddTextFieldWithName (string name, string text, UIView overlayView, IEnumerable<UIView> previousRowItems, List<NSLayoutConstraint> constraints)
 		{
-			UILabel titleLabel = AAPLStyleUtilities.CreateStandardLabel ();
+			UILabel titleLabel = StyleUtilities.CreateStandardLabel ();
 			titleLabel.Text = name;
 			overlayView.AddSubview (titleLabel);
 
 			var attributes = new CTStringAttributes ();
-			attributes.ForegroundColor = AAPLStyleUtilities.DetailOnOverlayPlaceholderColor.CGColor;
+			attributes.ForegroundColor = StyleUtilities.DetailOnOverlayPlaceholderColor.CGColor;
 
 			UITextField valueField = new UITextField {
 				WeakDelegate = this,
-				Font = AAPLStyleUtilities.StandardFont,
-				TextColor = AAPLStyleUtilities.DetailOnOverlayColor,
+				Font = StyleUtilities.StandardFont,
+				TextColor = StyleUtilities.DetailOnOverlayColor,
 				Text = text,
 				AttributedPlaceholder = new NSAttributedString("Type here...".LocalizedString("Placeholder for profile text fields"), attributes),
 			TranslatesAutoresizingMaskIntoConstraints = false
@@ -111,26 +111,26 @@ namespace HelloGoodbye
 
 			// Ensure sufficient spacing from the row above this one
 			foreach (UIView previousRowItem in previousRowItems)
-				constraints.Add (NSLayoutConstraint.Create (titleLabel, NSLayoutAttribute.Top, NSLayoutRelation.GreaterThanOrEqual, previousRowItem, NSLayoutAttribute.Bottom, 1f, AAPLMinimumVerticalSpacingBetweenRows));
+				constraints.Add (NSLayoutConstraint.Create (titleLabel, NSLayoutAttribute.Top, NSLayoutRelation.GreaterThanOrEqual, previousRowItem, NSLayoutAttribute.Bottom, 1f, MinimumVerticalSpacingBetweenRows));
 
 			// Place the title directly above the value
 			constraints.Add (NSLayoutConstraint.Create (valueField, NSLayoutAttribute.Top, NSLayoutRelation.Equal, titleLabel, NSLayoutAttribute.Bottom, 1f, 0f));
 
 			// Position the title and value within the overlay view
-			constraints.Add (NSLayoutConstraint.Create (titleLabel, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, overlayView, NSLayoutAttribute.Leading, 1f, AAPLStyleUtilities.ContentHorizontalMargin));
+			constraints.Add (NSLayoutConstraint.Create (titleLabel, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, overlayView, NSLayoutAttribute.Leading, 1f, StyleUtilities.ContentHorizontalMargin));
 			constraints.Add (NSLayoutConstraint.Create (valueField, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, titleLabel, NSLayoutAttribute.Leading, 1f, 0f));
-			constraints.Add (NSLayoutConstraint.Create (valueField, NSLayoutAttribute.Trailing, NSLayoutRelation.Equal, overlayView, NSLayoutAttribute.Trailing, 1f, -1 * AAPLStyleUtilities.ContentHorizontalMargin));
+			constraints.Add (NSLayoutConstraint.Create (valueField, NSLayoutAttribute.Trailing, NSLayoutRelation.Equal, overlayView, NSLayoutAttribute.Trailing, 1f, -1 * StyleUtilities.ContentHorizontalMargin));
 
 			return valueField;
 		}
 
 		private UIView[] AddAgeControlsToView(UIView overlayView, List<NSLayoutConstraint> constraints)
 		{
-			UILabel ageTitleLabel = AAPLStyleUtilities.CreateStandardLabel ();
+			UILabel ageTitleLabel = StyleUtilities.CreateStandardLabel ();
 			ageTitleLabel.Text = "Your age".LocalizedString ("The user's age");
 			overlayView.AddSubview (ageTitleLabel);
 
-			AAPLAgeSlider ageSlider = new AAPLAgeSlider {
+			AgeSlider ageSlider = new AgeSlider {
 				Value = _person.Age,
 				TranslatesAutoresizingMaskIntoConstraints = false,
 			};
@@ -142,27 +142,27 @@ namespace HelloGoodbye
 			UpdateAgeValueLabelFromSlider (ageSlider);
 
 //			// Position the age title and value side by side, within the overlay view
-			constraints.Add (NSLayoutConstraint.Create (ageTitleLabel, NSLayoutAttribute.Top, NSLayoutRelation.Equal, overlayView, NSLayoutAttribute.Top, 1f, AAPLStyleUtilities.ContentVerticalMargin));
-			constraints.Add (NSLayoutConstraint.Create (ageTitleLabel, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, overlayView, NSLayoutAttribute.Leading, 1f, AAPLStyleUtilities.ContentHorizontalMargin));
-			constraints.Add (NSLayoutConstraint.Create (ageSlider, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, ageTitleLabel, NSLayoutAttribute.Trailing, 1f, AAPLLabelControlMinimumSpacing));
+			constraints.Add (NSLayoutConstraint.Create (ageTitleLabel, NSLayoutAttribute.Top, NSLayoutRelation.Equal, overlayView, NSLayoutAttribute.Top, 1f, StyleUtilities.ContentVerticalMargin));
+			constraints.Add (NSLayoutConstraint.Create (ageTitleLabel, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, overlayView, NSLayoutAttribute.Leading, 1f, StyleUtilities.ContentHorizontalMargin));
+			constraints.Add (NSLayoutConstraint.Create (ageSlider, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, ageTitleLabel, NSLayoutAttribute.Trailing, 1f, LabelControlMinimumSpacing));
 			constraints.Add (NSLayoutConstraint.Create (ageSlider, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, ageTitleLabel, NSLayoutAttribute.CenterY, 1f, 0f));
-			constraints.Add (NSLayoutConstraint.Create (_ageValueLabel, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, ageSlider, NSLayoutAttribute.Trailing, 1f, AAPLLabelControlMinimumSpacing));
+			constraints.Add (NSLayoutConstraint.Create (_ageValueLabel, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, ageSlider, NSLayoutAttribute.Trailing, 1f, LabelControlMinimumSpacing));
 			constraints.Add (NSLayoutConstraint.Create (_ageValueLabel, NSLayoutAttribute.FirstBaseline, NSLayoutRelation.Equal, ageTitleLabel, NSLayoutAttribute.FirstBaseline, 1f, 0f));
-			constraints.Add (NSLayoutConstraint.Create (_ageValueLabel, NSLayoutAttribute.Trailing, NSLayoutRelation.Equal, overlayView, NSLayoutAttribute.Trailing, 1f, -1 * AAPLStyleUtilities.ContentHorizontalMargin));
+			constraints.Add (NSLayoutConstraint.Create (_ageValueLabel, NSLayoutAttribute.Trailing, NSLayoutRelation.Equal, overlayView, NSLayoutAttribute.Trailing, 1f, -1 * StyleUtilities.ContentHorizontalMargin));
 
 			return new UIView[]{ ageTitleLabel, ageSlider, _ageValueLabel };
 		}
 
 		private UILabel AddAgeValueLabelToView(UIView overlayView)
 		{
-			UILabel ageValueLabel = AAPLStyleUtilities.CreateStandardLabel ();
+			UILabel ageValueLabel = StyleUtilities.CreateStandardLabel ();
 			ageValueLabel.IsAccessibilityElement = false;
 			overlayView.AddSubview (ageValueLabel);
 
 			return ageValueLabel;
 		}
 
-		private void UpdateAgeValueLabelFromSlider(AAPLAgeSlider ageSlider)
+		private void UpdateAgeValueLabelFromSlider(AgeSlider ageSlider)
 		{
 			NSNumber number = NSNumber.FromFloat (ageSlider.Value);
 			_ageValueLabel.Text = NSNumberFormatter.LocalizedStringFromNumbernumberStyle (number, NSNumberFormatterStyle.Decimal);
@@ -173,10 +173,10 @@ namespace HelloGoodbye
 			_previewTab = AddPreviewTab ();
 			_previewTab.TranslatesAutoresizingMaskIntoConstraints = false;
 
-			AAPLPreviewLabel previewLabel = AddPreviewLabel ();
+			PreviewLabel previewLabel = AddPreviewLabel ();
 			previewLabel.TranslatesAutoresizingMaskIntoConstraints = false;
 
-			AAPLCardView cardView = AddCardView ();
+			CardView cardView = AddCardView ();
 			cardView.TranslatesAutoresizingMaskIntoConstraints = false;
 
 			// Pin the tab to the bottom center of the screen
@@ -184,8 +184,8 @@ namespace HelloGoodbye
 			constraints.Add (_cardRevealConstraint);
 			constraints.Add(NSLayoutConstraint.Create(_previewTab, NSLayoutAttribute.CenterX, NSLayoutRelation.Equal, View, NSLayoutAttribute.CenterX, 1f, 0f));
 			// Center the preview label within the tab
-			constraints.Add(NSLayoutConstraint.Create (previewLabel, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, _previewTab, NSLayoutAttribute.Leading, 1f, AAPLPreviewTabHorizontalPadding));
-			constraints.Add (NSLayoutConstraint.Create (previewLabel, NSLayoutAttribute.Trailing, NSLayoutRelation.Equal, _previewTab, NSLayoutAttribute.Trailing, 1f, -AAPLPreviewTabHorizontalPadding));
+			constraints.Add(NSLayoutConstraint.Create (previewLabel, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, _previewTab, NSLayoutAttribute.Leading, 1f, PreviewTabHorizontalPadding));
+			constraints.Add (NSLayoutConstraint.Create (previewLabel, NSLayoutAttribute.Trailing, NSLayoutRelation.Equal, _previewTab, NSLayoutAttribute.Trailing, 1f, -PreviewTabHorizontalPadding));
 			constraints.Add (NSLayoutConstraint.Create (previewLabel, NSLayoutAttribute.CenterY, NSLayoutRelation.Equal, _previewTab, NSLayoutAttribute.CenterY, 1f, 0f));
 
 			// Pin the top of the card to the bottom of the tab
@@ -211,18 +211,18 @@ namespace HelloGoodbye
 		private UIImage CreatePreviewTabBackgroundImage()
 		{
 			// The preview tab should be flat on the bottom, and have rounded corners on top.
-			var size = new SizeF (AAPLPreviewTabMinimumWidth, AAPLPreviewTabHeight);
+			var size = new SizeF (PreviewTabMinimumWidth, PreviewTabHeight);
 			UIGraphics.BeginImageContextWithOptions (size, false, UIScreen.MainScreen.Scale);
 
-			var rect = new RectangleF (0f, 0f, AAPLPreviewTabMinimumWidth, AAPLPreviewTabHeight);
-			var radii = new SizeF (AAPLPreviewTabCornerRadius, AAPLPreviewTabCornerRadius);
+			var rect = new RectangleF (0f, 0f, PreviewTabMinimumWidth, PreviewTabHeight);
+			var radii = new SizeF (PreviewTabCornerRadius, PreviewTabCornerRadius);
 			var roundedTopCornersRect = UIBezierPath.FromRoundedRect (rect, UIRectCorner.TopLeft | UIRectCorner.TopRight, radii);
 
-			AAPLStyleUtilities.ForegroundColor.SetColor ();
+			StyleUtilities.ForegroundColor.SetColor ();
 			roundedTopCornersRect.Fill ();
 			UIImage previewTabBackgroundImage = UIGraphics.GetImageFromCurrentImageContext ();
 
-			var caps = new UIEdgeInsets (0f, AAPLPreviewTabCornerRadius, 0f, AAPLPreviewTabCornerRadius);
+			var caps = new UIEdgeInsets (0f, PreviewTabCornerRadius, 0f, PreviewTabCornerRadius);
 			previewTabBackgroundImage = previewTabBackgroundImage.CreateResizableImage (caps);
 
 			UIGraphics.EndImageContext ();
@@ -270,7 +270,7 @@ namespace HelloGoodbye
 		{
 			View.LayoutIfNeeded ();
 
-			UIView.Animate (AAPLCardRevealAnimationDuration, () => {
+			UIView.Animate (CardRevealAnimationDuration, () => {
 				_cardRevealConstraint.Constant = -1 * CardHeight;
 				View.LayoutIfNeeded ();
 			}, () => {
@@ -282,7 +282,7 @@ namespace HelloGoodbye
 		{
 			View.LayoutIfNeeded ();
 
-			UIView.Animate (AAPLCardRevealAnimationDuration, () => {
+			UIView.Animate (CardRevealAnimationDuration, () => {
 				_cardRevealConstraint.Constant = 0f;
 				View.LayoutIfNeeded ();
 			}, () => {
@@ -290,9 +290,9 @@ namespace HelloGoodbye
 			});
 		}
 
-		private AAPLPreviewLabel AddPreviewLabel()
+		private PreviewLabel AddPreviewLabel()
 		{
-			AAPLPreviewLabel previewLabel = new AAPLPreviewLabel();
+			PreviewLabel previewLabel = new PreviewLabel();
 			previewLabel.ActivatePreviewLabel += DidActivatePreviewLabel;
 			View.AddSubview(previewLabel);
 
@@ -307,10 +307,10 @@ namespace HelloGoodbye
 				RevealCard ();
 		}
 
-		private AAPLCardView AddCardView()
+		private CardView AddCardView()
 		{
-			AAPLCardView cardView = new AAPLCardView();
-			cardView.UpdateWithPerson (_person);
+			CardView cardView = new CardView();
+			cardView.Update (_person);
 			_cardView = cardView;
 			View.AddSubview (cardView);
 
@@ -319,7 +319,7 @@ namespace HelloGoodbye
 
 		private void OnAgeUpdate (object sender, EventArgs e)
 		{
-			var ageSlider = (AAPLAgeSlider)sender;
+			var ageSlider = (AgeSlider)sender;
 			// Turn the value into a valid age
 			int age = (int)Math.Round(ageSlider.Value);
 			ageSlider.Value = age;
@@ -331,19 +331,20 @@ namespace HelloGoodbye
 			_person.Age = age;
 
 			// Update the card view with the new data
-			_cardView.UpdateWithPerson (_person);
+			_cardView.Update (_person);
 		}
 
 		#region UITextFieldDelegate
+
 		[Export("textFieldDidBeginEditing:")]
-		private void TextFieldDidBeginEditing(UITextField textField)
+		public void TextFieldDidBeginEditing(UITextField textField)
 		{
 			// Add a Done button so that the user can dismiss the keyboard easily
 			NavigationItem.RightBarButtonItem = new UIBarButtonItem (UIBarButtonSystemItem.Done, DoneButtonPressed);
 		}
 
 		[Export("textFieldDidEndEditing:")]
-		private void TextFieldDidEndEditing(UITextField textField)
+		public void TextFieldDidEndEditing(UITextField textField)
 		{
 			// Remove the Done button
 			NavigationItem.RightBarButtonItem = null;
@@ -355,7 +356,7 @@ namespace HelloGoodbye
 				_person.ElevatorPitch = textField.Text;
 
 			// Update the card view with the new data
-			_cardView.UpdateWithPerson(_person);
+			_cardView.Update(_person);
 		}
 		#endregion
 

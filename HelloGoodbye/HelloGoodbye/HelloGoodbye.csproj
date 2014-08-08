@@ -92,18 +92,19 @@
   <ItemGroup>
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
-    <Compile Include="Screens\StartScreen\AAPLStartViewController.cs" />
-    <Compile Include="Screens\AAPLPhotoBackgroundViewController.cs" />
-    <Compile Include="AAPLStyleUtilities.cs" />
     <Compile Include="LocalizationHelper.cs" />
-    <Compile Include="Model\AAPLPerson.cs" />
-    <Compile Include="Screens\Profile\AAPLProfileViewController.cs" />
-    <Compile Include="Screens\Profile\AAPLCardView.cs" />
-    <Compile Include="Screens\Controls\AAPLAgeSlider.cs" />
-    <Compile Include="Screens\Controls\AAPLPreviewLabel.cs" />
-    <Compile Include="Screens\AAPLMatchesViewController.cs" />
+    <Compile Include="Screens\MatchesViewController.cs" />
+    <Compile Include="Screens\PhotoBackgroundViewController.cs" />
+    <Compile Include="StyleUtilities.cs" />
+    <Compile Include="Model\Person.cs" />
+    <Compile Include="Screens\Controls\AgeSlider.cs" />
+    <Compile Include="Screens\Controls\PreviewLabel.cs" />
+    <Compile Include="Screens\Profile\CardView.cs" />
+    <Compile Include="Screens\Profile\ProfileViewController.cs" />
+    <Compile Include="Screens\StartScreen\StartViewController.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Screens\" />
     <Folder Include="Screens\StartScreen\" />

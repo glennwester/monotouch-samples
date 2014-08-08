@@ -7,12 +7,12 @@ using MonoTouch.ObjCRuntime;
 
 namespace HelloGoodbye
 {
-	public class AAPLStartViewController : AAPLPhotoBackgroundViewController
+	public class StartViewController : PhotoBackgroundViewController
 	{
-		private const float AAPLButtonToButtonVerticalSpacing = 10;
-		private const float AAPLLogoPadding = 30;
+		private const float ButtonToButtonVerticalSpacing = 10;
+		private const float LogoPadding = 30;
 
-		public AAPLStartViewController ()
+		public StartViewController ()
 		{
 			Title = "HelloGoodbye".LocalizedString("Title of the start page");
 			BackgroundImage = UIImage.FromBundle ("couple.jpg");
@@ -24,10 +24,10 @@ namespace HelloGoodbye
 
 			UIView containerView = View;
 			UIView logoOverlayView = new UIView {
-				BackgroundColor = AAPLStyleUtilities.OverlayColor,
+				BackgroundColor = StyleUtilities.OverlayColor,
 				TranslatesAutoresizingMaskIntoConstraints = false
 			};
-			logoOverlayView.Layer.CornerRadius = AAPLStyleUtilities.OverlayCornerRadius;
+			logoOverlayView.Layer.CornerRadius = StyleUtilities.OverlayCornerRadius;
 
 			UIImageView logo = new UIImageView (UIImage.FromBundle ("logo")) {
 				IsAccessibilityElement = true,
@@ -57,10 +57,10 @@ namespace HelloGoodbye
 				NSLayoutConstraint.Create (logoOverlayView, NSLayoutAttribute.Top, NSLayoutRelation.Equal, topDummyView, NSLayoutAttribute.Bottom, 1f, 0f),
 				NSLayoutConstraint.Create (logoOverlayView, NSLayoutAttribute.CenterX, NSLayoutRelation.Equal, containerView, NSLayoutAttribute.CenterX, 1f, 0f),
 				NSLayoutConstraint.Create (logoOverlayView, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, middleDummyView, NSLayoutAttribute.Top, 1f, 0f),
-				NSLayoutConstraint.Create (logo, NSLayoutAttribute.Top, NSLayoutRelation.Equal, logoOverlayView, NSLayoutAttribute.Top, 1f, AAPLLogoPadding),
-				NSLayoutConstraint.Create (logo, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, logoOverlayView, NSLayoutAttribute.Bottom, 1f, -AAPLLogoPadding),
-				NSLayoutConstraint.Create (logo, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, logoOverlayView, NSLayoutAttribute.Leading, 1f, AAPLLogoPadding),
-				NSLayoutConstraint.Create (logo, NSLayoutAttribute.Trailing, NSLayoutRelation.Equal, logoOverlayView, NSLayoutAttribute.Trailing, 1f, -AAPLLogoPadding)
+				NSLayoutConstraint.Create (logo, NSLayoutAttribute.Top, NSLayoutRelation.Equal, logoOverlayView, NSLayoutAttribute.Top, 1f, LogoPadding),
+				NSLayoutConstraint.Create (logo, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, logoOverlayView, NSLayoutAttribute.Bottom, 1f, -LogoPadding),
+				NSLayoutConstraint.Create (logo, NSLayoutAttribute.Leading, NSLayoutRelation.Equal, logoOverlayView, NSLayoutAttribute.Leading, 1f, LogoPadding),
+				NSLayoutConstraint.Create (logo, NSLayoutAttribute.Trailing, NSLayoutRelation.Equal, logoOverlayView, NSLayoutAttribute.Trailing, 1f, -LogoPadding)
 			});
 
 			// Position the profile button
@@ -68,7 +68,7 @@ namespace HelloGoodbye
 			constraints.Add (NSLayoutConstraint.Create (profileButton, NSLayoutAttribute.Top, NSLayoutRelation.Equal, middleDummyView, NSLayoutAttribute.Bottom, 1f, 0f));
 
 			// Put the matches button below the profile button
-			constraints.Add (NSLayoutConstraint.Create (matchesButton, NSLayoutAttribute.Top, NSLayoutRelation.Equal, profileButton, NSLayoutAttribute.Bottom, 1f, AAPLButtonToButtonVerticalSpacing));
+			constraints.Add (NSLayoutConstraint.Create (matchesButton, NSLayoutAttribute.Top, NSLayoutRelation.Equal, profileButton, NSLayoutAttribute.Bottom, 1f, ButtonToButtonVerticalSpacing));
 			constraints.Add (NSLayoutConstraint.Create (matchesButton, NSLayoutAttribute.Bottom, NSLayoutRelation.Equal, bottomDummyView, NSLayoutAttribute.Top, 1f, 0f));
 
 			// Align the left and right edges of the two buttons and the logo
@@ -101,7 +101,7 @@ namespace HelloGoodbye
 
 		private UIButton CreateButton(string titleKey, string titleComment, EventHandler handler)
 		{
-			UIButton button = AAPLStyleUtilities.CreateOverlayRoundedRectButton ();
+			UIButton button = StyleUtilities.CreateOverlayRoundedRectButton ();
 			button.SetTitle (titleKey.LocalizedString (titleComment), UIControlState.Normal);
 			button.TouchUpInside += handler;
 
@@ -110,13 +110,13 @@ namespace HelloGoodbye
 
 		private void ShowProfile (object sender, EventArgs e)
 		{
-			AAPLProfileViewController profileViewController = new AAPLProfileViewController ();
+			ProfileViewController profileViewController = new ProfileViewController ();
 			NavigationController.PushViewController (profileViewController, true);
 		}
 
 		private void ShowMatches (object sender, EventArgs e)
 		{
-			AAPLMatchesViewController matchesViewController = new AAPLMatchesViewController ();
+			MatchesViewController matchesViewController = new MatchesViewController ();
 			NavigationController.PushViewController (matchesViewController, true);
 		}
 	}

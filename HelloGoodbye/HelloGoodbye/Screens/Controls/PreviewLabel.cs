@@ -4,7 +4,7 @@ using System.Drawing;
 
 namespace HelloGoodbye
 {
-	public class AAPLPreviewLabel : UILabel
+	public class PreviewLabel : UILabel
 	{
 		public event EventHandler ActivatePreviewLabel;
 
@@ -17,17 +17,18 @@ namespace HelloGoodbye
 			}
 		}
 
-		public AAPLPreviewLabel ()
+		public PreviewLabel ()
 		{
 			Text = "Preview".LocalizedString("Name of the card preview tab");
-			Font = AAPLStyleUtilities.LargeFont;
-			TextColor = AAPLStyleUtilities.PreviewTabLabelColor;
+			Font = StyleUtilities.LargeFont;
+			TextColor = StyleUtilities.PreviewTabLabelColor;
 		}
 
 		public override bool AccessibilityActivate ()
 		{
-			if (ActivatePreviewLabel != null)
-				ActivatePreviewLabel (this, EventArgs.Empty);
+			EventHandler handler = ActivatePreviewLabel;
+			if (handler != null)
+				handler (this, EventArgs.Empty);
 
 			return true;
 		}

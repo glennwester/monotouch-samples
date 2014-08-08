@@ -5,14 +5,14 @@ using MonoTouch.UIKit;
 
 namespace HelloGoodbye
 {
-	public static class AAPLStyleUtilities
+	public static class StyleUtilities
 	{
-		const float AAPLOverlayCornerRadius = 10;
-		const float AAPLButtonVerticalContentInset = 10;
-		const float AAPLButtonHorizontalContentInset = 10;
-		const float AAPLOverlayMargin = 20;
-		const float AAPLContentVerticalMargin = 50;
-		const float AAPLContentHorizontalMargin = 30;
+		const float kOverlayCornerRadius = 10;
+		const float kButtonVerticalContentInset = 10;
+		const float kButtonHorizontalContentInset = 10;
+		const float kOverlayMargin = 20;
+		const float kContentVerticalMargin = 50;
+		const float kContentHorizontalMargin = 30;
 
 		public static UIColor ForegroundColor {
 			get {
@@ -66,25 +66,25 @@ namespace HelloGoodbye
 
 		public static float OverlayCornerRadius {
 			get {
-				return AAPLOverlayCornerRadius;
+				return kOverlayCornerRadius;
 			}
 		}
 
 		public static float OverlayMargin {
 			get {
-				return AAPLOverlayMargin;
+				return kOverlayMargin;
 			}
 		}
 
 		public static float ContentHorizontalMargin {
 			get {
-				return AAPLContentHorizontalMargin;
+				return kContentHorizontalMargin;
 			}
 		}
 
 		public static float ContentVerticalMargin {
 			get {
-				return AAPLContentVerticalMargin;
+				return kContentVerticalMargin;
 			}
 		}
 
@@ -131,7 +131,7 @@ namespace HelloGoodbye
 			button.SetTitleColor (ForegroundColor, UIControlState.Normal);
 			button.TitleLabel.Font = LargeFont;
 			button.SetBackgroundImage (CreateOverlayRoundedRectImage (), UIControlState.Normal);
-			button.ContentEdgeInsets = new UIEdgeInsets (AAPLButtonVerticalContentInset, AAPLButtonHorizontalContentInset, AAPLButtonVerticalContentInset, AAPLButtonHorizontalContentInset);
+			button.ContentEdgeInsets = new UIEdgeInsets (kButtonVerticalContentInset, kButtonHorizontalContentInset, kButtonVerticalContentInset, kButtonHorizontalContentInset);
 			return button;
 
 		}
@@ -139,16 +139,16 @@ namespace HelloGoodbye
 		private static UIImage CreateOverlayRoundedRectImage()
 		{
 			UIImage roundedRectImage = null;
-			SizeF imageSize = new SizeF(2 * AAPLOverlayCornerRadius, 2 * AAPLOverlayCornerRadius);
+			SizeF imageSize = new SizeF(2 * kOverlayCornerRadius, 2 * kOverlayCornerRadius);
 			UIGraphics.BeginImageContextWithOptions (imageSize, false, UIScreen.MainScreen.Scale);
 
 			var rect = new RectangleF (PointF.Empty, imageSize);
-			UIBezierPath roundedRect = UIBezierPath.FromRoundedRect (rect, AAPLOverlayCornerRadius);
+			UIBezierPath roundedRect = UIBezierPath.FromRoundedRect (rect, kOverlayCornerRadius);
 			OverlayColor.SetColor ();
 			roundedRect.Fill ();
 
 			roundedRectImage = UIGraphics.GetImageFromCurrentImageContext ();
-			roundedRectImage = roundedRectImage.CreateResizableImage (new UIEdgeInsets (AAPLOverlayCornerRadius, AAPLOverlayCornerRadius, AAPLOverlayCornerRadius, AAPLOverlayCornerRadius));
+			roundedRectImage = roundedRectImage.CreateResizableImage (new UIEdgeInsets (kOverlayCornerRadius, kOverlayCornerRadius, kOverlayCornerRadius, kOverlayCornerRadius));
 			UIGraphics.EndImageContext ();
 
 			return roundedRectImage;
