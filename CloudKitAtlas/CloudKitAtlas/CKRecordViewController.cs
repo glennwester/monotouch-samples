@@ -36,6 +36,7 @@ namespace CloudKitAtlas
 
 			locationManager.LocationsUpdated += OnLocationsUpdated;
 
+			locationManager.RequestAlwaysAuthorization ();
 			locationManager.StartUpdatingLocation ();
 		}
 
