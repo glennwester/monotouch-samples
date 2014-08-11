@@ -35,6 +35,8 @@ namespace CloudKitAtlas
 			};
 
 			locationManager.LocationsUpdated += OnLocationsUpdated;
+
+			locationManager.StartUpdatingLocation ();
 		}
 
 		public override void ViewWillDisappear (bool animated)
