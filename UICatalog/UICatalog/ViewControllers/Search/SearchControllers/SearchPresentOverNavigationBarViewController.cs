@@ -9,22 +9,6 @@ namespace UICatalog
 {
 	public partial class SearchPresentOverNavigationBarViewController : SearchControllerBaseViewController
 	{
-		// TODO: remove this subclass https://trello.com/c/bEtup8us
-		private class UISearchResultsUpdatingWrapper : UISearchResultsUpdating
-		{
-			private readonly SearchResultsViewController _searchResultsViewController;
-
-			public UISearchResultsUpdatingWrapper(SearchResultsViewController searchResultsViewController)
-			{
-				_searchResultsViewController = searchResultsViewController;
-			}
-
-			public override void UpdateSearchResultsForSearchController (UISearchController searchController)
-			{
-				_searchResultsViewController.UpdateSearchResultsForSearchController (searchController);
-			}
-		}
-
 		private UISearchController _searchController;
 		public SearchPresentOverNavigationBarViewController (IntPtr handle)
 			: base (handle)
