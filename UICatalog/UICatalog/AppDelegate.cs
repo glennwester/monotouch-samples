@@ -14,6 +14,10 @@ namespace UICatalog
 
 		public override bool FinishedLaunching (UIApplication app, NSDictionary options)
 		{
+			UISplitViewController splitViewController = (UISplitViewController)Window.RootViewController;
+
+			splitViewController.PreferredDisplayMode = UISplitViewControllerDisplayMode.AllVisible;
+
 			return true;
 		}
 	}
