@@ -24,6 +24,9 @@ namespace HelloGoodbye
 		private List<Person> _matches;
 		private int _currentMatchIndex;
 
+		private UIAccessibilityCustomAction _helloAction;
+		private UIAccessibilityCustomAction _goodbyeAction;
+
 		private Person CurrentMatch {
 			get {
 				return _currentMatchIndex < _matches.Count ? _matches [_currentMatchIndex] : null;
@@ -120,14 +123,14 @@ namespace HelloGoodbye
 			cardView.AddGestureRecognizer (swipeDownRecognizer);
 
 			string sayHelloName = "Say hello".LocalizedString (@"Accessibility action to say hello");
-			UIAccessibilityCustomAction helloAction = new UIAccessibilityCustomAction (sayHelloName, SayHello);
+			_helloAction = new UIAccessibilityCustomAction (sayHelloName, SayHello);
 
 			string sayGoodbyeName = "Say goodbye".LocalizedString ("Accessibility action to say goodbye");
-			UIAccessibilityCustomAction goodbyeAction = new UIAccessibilityCustomAction (sayGoodbyeName, SayGoodbye);
+			_goodbyeAction = new UIAccessibilityCustomAction (sayGoodbyeName, SayGoodbye);
 
 			UIView[] elements = NSArray.FromArray<UIView> ((NSArray)cardView.GetAccessibilityElements ());
 			foreach (UIView element in elements)
-				element.AccessibilityCustomActions = new UIAccessibilityCustomAction[] { helloAction, goodbyeAction };
+				element.AccessibilityCustomActions = new UIAccessibilityCustomAction[] { _helloAction, _goodbyeAction };
 
 			return cardView;
 		}
@@ -135,13 +138,13 @@ namespace HelloGoodbye
 		private void HandleSwipeUp(UISwipeGestureRecognizer gestureRecognizer)
 		{
 			if (gestureRecognizer.State == UIGestureRecognizerState.Recognized)
-				SayHello ();
+				SayHello (_helloAction);
 		}
 
 		private void HandleSwipeDown(UISwipeGestureRecognizer gestureRecognizer)
 		{
 			if (gestureRecognizer.State == UIGestureRecognizerState.Recognized)
-				SayGoodbye ();
+				SayGoodbye (_goodbyeAction);
 		}
 
 		private UIView AddAllMatchesViewExplanatoryViewToContainerView(UIView containerView, List<NSLayoutConstraint> constraints)
@@ -170,16 +173,16 @@ namespace HelloGoodbye
 			return overlayView;
 		}
 
-		// TODO: should return bool https://trello.com/c/qVOKpvpg
-		private void SayHello()
+		private bool SayHello(UIAccessibilityCustomAction customAction)
 		{
 			AnimateCardsForHello (true);
+			return true;
 		}
 
-		// TODO: should return bool https://trello.com/c/qVOKpvpg
-		private void SayGoodbye()
+		private bool SayGoodbye(UIAccessibilityCustomAction customAction)
 		{
 			AnimateCardsForHello (false);
+			return true;
 		}
 
 		private void AnimateCardsForHello(bool forHello)
