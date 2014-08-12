@@ -199,6 +199,7 @@
     <Compile Include="ViewControllers\Search\SearchControllers\SearchShowResultsInSourceViewController.designer.cs">
       <DependentUpon>SearchShowResultsInSourceViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="ViewControllers\Search\SearchControllers\Base\SearchControllerBaseViewController.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
@@ -210,6 +211,7 @@
     <Folder Include="ViewControllers\Toolbar View Controllers\" />
     <Folder Include="ViewControllers\Search\" />
     <Folder Include="ViewControllers\Search\SearchControllers\" />
+    <Folder Include="ViewControllers\Search\SearchControllers\Base\" />
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Resources\Images.xcassets\AppIcon.appiconset\Contents.json" />
