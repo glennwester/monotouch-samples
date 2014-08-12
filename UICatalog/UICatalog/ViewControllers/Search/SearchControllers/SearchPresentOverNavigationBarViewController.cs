@@ -7,10 +7,45 @@ using MonoTouch.UIKit;
 
 namespace UICatalog
 {
-	public partial class SearchPresentOverNavigationBarViewController : UITableViewController
+	public partial class SearchPresentOverNavigationBarViewController : SearchControllerBaseViewController
 	{
-		public SearchPresentOverNavigationBarViewController (IntPtr handle) : base (handle)
+		// TODO: remove this subclass https://trello.com/c/bEtup8us
+		private class UISearchResultsUpdatingWrapper : UISearchResultsUpdating
 		{
+			private readonly SearchResultsViewController _searchResultsViewController;
+
+			public UISearchResultsUpdatingWrapper(SearchResultsViewController searchResultsViewController)
+			{
+				_searchResultsViewController = searchResultsViewController;
+			}
+
+			public override void UpdateSearchResultsForSearchController (UISearchController searchController)
+			{
+				_searchResultsViewController.UpdateSearchResultsForSearchController (searchController);
+			}
+		}
+
+		private UISearchController _searchController;
+		public SearchPresentOverNavigationBarViewController (IntPtr handle)
+			: base (handle)
+		{
+		}
+
+		[Action("searchButtonClicked:")]
+		public void SearchButtonClicked(UIBarButtonItem sender)
+		{
+			// Create the search results view controller and use it for the UISearchController.
+			SearchResultsViewController searchResultsController = (SearchResultsViewController)Storyboard.InstantiateViewController (SearchResultsViewController.StoryboardIdentifier);
+			UISearchResultsUpdatingWrapper wrapper = new UISearchResultsUpdatingWrapper (searchResultsController);
+
+			// Create the search controller and make it perform the results updating.
+			_searchController = new UISearchController (searchResultsController);
+			// TODO: need overload https://trello.com/c/bEtup8us
+			_searchController.SearchResultsUpdater = wrapper;
+			_searchController.HidesNavigationBarDuringPresentation = false;
+
+			// Present the view controller.
+			PresentViewController (_searchController, true, null);
 		}
 	}
 }

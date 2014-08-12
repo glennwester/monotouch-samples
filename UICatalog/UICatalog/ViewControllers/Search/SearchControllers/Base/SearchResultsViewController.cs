@@ -8,6 +8,8 @@ namespace UICatalog
 	[Register ("SearchResultsViewController")]
 	public class SearchResultsViewController : SearchControllerBaseViewController, IUISearchResultsUpdating
 	{
+		public static readonly string StoryboardIdentifier = "SearchResultsViewControllerStoryboardIdentifier";
+
 		public SearchResultsViewController (IntPtr handle)
 			: base (handle)
 		{

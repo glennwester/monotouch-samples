@@ -12,9 +12,5 @@ namespace UICatalog
 	[Register ("SearchPresentOverNavigationBarViewController")]
 	partial class SearchPresentOverNavigationBarViewController
 	{
-		
-		void ReleaseDesignerOutlets ()
-		{
-		}
 	}
 }
