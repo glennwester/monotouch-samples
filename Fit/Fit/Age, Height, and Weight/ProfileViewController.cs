@@ -39,9 +39,9 @@ namespace Fit
 		{
 		}
 
-		public override async void ViewDidAppear (bool animated)
+		public override async void ViewWillAppear (bool animated)
 		{
-			base.ViewDidAppear (animated);
+			base.ViewWillAppear (animated);
 			if (HKHealthStore.IsHealthDataAvailable) {
 
 				var success = await HealthStore.RequestAuthorizationToShareAsync (DataTypesToWrite, DataTypesToRead);

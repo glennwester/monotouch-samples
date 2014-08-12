@@ -48,7 +48,7 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <IpaPackageName>
     </IpaPackageName>
-    <CodesignProvision>6076351A-6CCC-4CA4-8718-A86494AC14B8</CodesignProvision>
+    <CodesignProvision>76EBED03-D9D6-4C5B-A52B-BD0FFB49DB7F</CodesignProvision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>full</DebugType>
