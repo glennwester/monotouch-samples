@@ -7,10 +7,34 @@ using MonoTouch.UIKit;
 
 namespace UICatalog
 {
-	public partial class SearchShowResultsInSourceViewController : UITableViewController
+	public partial class SearchShowResultsInSourceViewController : SearchResultsViewController
 	{
-		public SearchShowResultsInSourceViewController (IntPtr handle) : base (handle)
+		private UISearchController _searchController;
+
+		public SearchShowResultsInSourceViewController (IntPtr handle)
+			: base (handle)
 		{
+		}
+
+		public override void ViewDidLoad ()
+		{
+			base.ViewDidLoad ();
+
+			// Create the search controller, but we'll make sure that this AAPLSearchShowResultsInSourceViewController
+			// performs the results updating.
+
+			// TODO: parameter must be null https://trello.com/c/SibgrTuB
+			_searchController = new UISearchController (new UIViewController());
+			_searchController.SearchResultsUpdater = new UISearchResultsUpdatingWrapper (this);
+			_searchController.DimsBackgroundDuringPresentation = false;
+
+			// Make sure the that the search bar is visible within the navigation bar.
+			_searchController.SearchBar.SizeToFit ();
+
+			// Include the search controller's search bar within the table's header view.
+			TableView.TableHeaderView = _searchController.SearchBar;
+
+			DefinesPresentationContext = true;
 		}
 	}
 }
