@@ -15,7 +15,8 @@ namespace UICatalog
 
 		private string _filterString;
 
-		public SearchControllerBaseViewController ()
+		public SearchControllerBaseViewController (IntPtr handle)
+			: base (handle)
 		{
 		}
 
@@ -37,7 +38,7 @@ namespace UICatalog
 			_visibleResults = _allResults;
 		}
 
-		public void ApplyFilter(string filter)
+		protected void ApplyFilter(string filter)
 		{
 			_filterString = filter;
 

@@ -191,15 +191,12 @@
     <Compile Include="ViewControllers\Search\SearchControllers\SearchPresentOverNavigationBarViewController.designer.cs">
       <DependentUpon>SearchPresentOverNavigationBarViewController.cs</DependentUpon>
     </Compile>
-    <Compile Include="ViewControllers\Search\SearchControllers\SearchResultsViewController.cs" />
-    <Compile Include="ViewControllers\Search\SearchControllers\SearchResultsViewController.designer.cs">
-      <DependentUpon>SearchResultsViewController.cs</DependentUpon>
-    </Compile>
     <Compile Include="ViewControllers\Search\SearchControllers\SearchShowResultsInSourceViewController.cs" />
     <Compile Include="ViewControllers\Search\SearchControllers\SearchShowResultsInSourceViewController.designer.cs">
       <DependentUpon>SearchShowResultsInSourceViewController.cs</DependentUpon>
     </Compile>
     <Compile Include="ViewControllers\Search\SearchControllers\Base\SearchControllerBaseViewController.cs" />
+    <Compile Include="ViewControllers\Search\SearchControllers\Base\SearchResultsViewController.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
