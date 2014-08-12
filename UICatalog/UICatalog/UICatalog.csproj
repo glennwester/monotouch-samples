@@ -163,14 +163,6 @@
     </Compile>
     <Compile Include="UIColor.cs" />
     <Compile Include="LocalizationExtension.cs" />
-    <Compile Include="ViewControllers\Search Bar View Controllers\DefaultSearchBarViewController.cs" />
-    <Compile Include="ViewControllers\Search Bar View Controllers\DefaultSearchBarViewController.designer.cs">
-      <DependentUpon>DefaultSearchBarViewController.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ViewControllers\Search Bar View Controllers\CustomSearchBarViewController.cs" />
-    <Compile Include="ViewControllers\Search Bar View Controllers\CustomSearchBarViewController.designer.cs">
-      <DependentUpon>CustomSearchBarViewController.cs</DependentUpon>
-    </Compile>
     <Compile Include="ViewControllers\Toolbar View Controllers\DefaultToolbarViewController.cs" />
     <Compile Include="ViewControllers\Toolbar View Controllers\DefaultToolbarViewController.designer.cs">
       <DependentUpon>DefaultToolbarViewController.cs</DependentUpon>
@@ -183,6 +175,30 @@
     <Compile Include="ViewControllers\Toolbar View Controllers\CustomToolbarViewController.designer.cs">
       <DependentUpon>CustomToolbarViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="ViewControllers\Search\SearchBar\CustomSearchBarViewController.cs" />
+    <Compile Include="ViewControllers\Search\SearchBar\CustomSearchBarViewController.designer.cs">
+      <DependentUpon>CustomSearchBarViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewControllers\Search\SearchBar\DefaultSearchBarViewController.cs" />
+    <Compile Include="ViewControllers\Search\SearchBar\DefaultSearchBarViewController.designer.cs">
+      <DependentUpon>DefaultSearchBarViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewControllers\Search\SearchControllers\SearchBarEmbeddedInNavigationBarViewController.cs" />
+    <Compile Include="ViewControllers\Search\SearchControllers\SearchBarEmbeddedInNavigationBarViewController.designer.cs">
+      <DependentUpon>SearchBarEmbeddedInNavigationBarViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewControllers\Search\SearchControllers\SearchPresentOverNavigationBarViewController.cs" />
+    <Compile Include="ViewControllers\Search\SearchControllers\SearchPresentOverNavigationBarViewController.designer.cs">
+      <DependentUpon>SearchPresentOverNavigationBarViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewControllers\Search\SearchControllers\SearchResultsViewController.cs" />
+    <Compile Include="ViewControllers\Search\SearchControllers\SearchResultsViewController.designer.cs">
+      <DependentUpon>SearchResultsViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewControllers\Search\SearchControllers\SearchShowResultsInSourceViewController.cs" />
+    <Compile Include="ViewControllers\Search\SearchControllers\SearchShowResultsInSourceViewController.designer.cs">
+      <DependentUpon>SearchShowResultsInSourceViewController.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
@@ -191,8 +207,9 @@
     <Folder Include="Resources\Images.xcassets\" />
     <Folder Include="ViewControllers\" />
     <Folder Include="Resources\en.lproj\" />
-    <Folder Include="ViewControllers\Search Bar View Controllers\" />
     <Folder Include="ViewControllers\Toolbar View Controllers\" />
+    <Folder Include="ViewControllers\Search\" />
+    <Folder Include="ViewControllers\Search\SearchControllers\" />
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Resources\Images.xcassets\AppIcon.appiconset\Contents.json" />
