@@ -5,4 +5,5 @@
 	<Level>Advanced</Level>
 	<Tags>Media</Tags>
 	<Gallery>true</Gallery>
+	<Brief>Sample shows how to use the low-level AudioToolbox API.</Brief>
 </SampleMetadata>

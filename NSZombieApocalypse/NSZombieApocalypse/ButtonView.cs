@@ -1,20 +1,24 @@
 using System;
-using System.Drawing;
-using MonoTouch.CoreGraphics;
-using MonoTouch.UIKit;
+using CoreGraphics;
+using UIKit;
 
 namespace NSZombieApocalypse
 {
-	public class ButtonView: UIControl
+	public class TrackingEventArgs : EventArgs
+	{
+		public UITouch Touch { get; set; }
+	}
+
+	public sealed class ButtonView: UIControl
 	{
 		UILabel labelView;
 		UIImageView imageView;
 
-		public event TrackingStartedEventHandler TrackingStartedEvent;
-		public event TrackingContinuedEventHandler TrackingContinuedEvent;
-		public event TrackingEndedEventHandler TrackingEndedEvent;
+		public event EventHandler<TrackingEventArgs> TrackingStartedEvent;
+		public event EventHandler<TrackingEventArgs> TrackingContinuedEvent;
+		public event EventHandler<TrackingEventArgs> TrackingEndedEvent;
 
-		public ButtonView (RectangleF frame):base (frame)
+		public ButtonView (CGRect frame):base (frame)
 		{
 			imageView = new UIImageView (UIImage.FromBundle ("buttonView.png"));
 			AddSubview (imageView);
@@ -24,33 +28,30 @@ namespace NSZombieApocalypse
 			MultipleTouchEnabled = true;
 		}
 
-		public static SizeF ButtonSize {
+		public static CGSize ButtonSize {
 			get {
-				SizeF size = UIImage.FromBundle ("buttonView.png").Size;
+				CGSize size = UIImage.FromBundle ("buttonView.png").Size;
 				size.Height += 20;
 				size.Width += 60;
 				return size;
 			}
 		}
 
-		public override bool BeginTracking (UITouch touch, UIEvent uievent)
+		public override bool BeginTracking (UITouch uitouch, UIEvent uievent)
 		{
-			if (TrackingStartedEvent != null)
-				TrackingStartedEvent (this);
+			TrackingStartedEvent?.Invoke (this, new TrackingEventArgs { Touch = uitouch });
 			return true;
 		}
 
-		public override bool ContinueTracking (UITouch touch, UIEvent uievent)
+		public override bool ContinueTracking (UITouch uitouch, UIEvent uievent)
 		{
-			if (TrackingContinuedEvent != null)
-				TrackingContinuedEvent (this, touch);
+			TrackingContinuedEvent?.Invoke (this, new TrackingEventArgs { Touch = uitouch });
 			return true;
 		}
 
-		public override void EndTracking (UITouch touch, UIEvent uievent)
+		public override void EndTracking (UITouch uitouch, UIEvent uievent)
 		{
-			if (TrackingEndedEvent != null)
-				TrackingEndedEvent (this, touch);
+			TrackingEndedEvent?.Invoke (this, new TrackingEventArgs { Touch = uitouch });
 		}
 
 		public override void CancelTracking (UIEvent uievent)
@@ -101,10 +102,10 @@ namespace NSZombieApocalypse
 
 		public override void LayoutSubviews ()
 		{
-			RectangleF frame = Bounds;
-			var newFrame = new RectangleF (Bounds.X, frame.Size.Height - 20, Bounds.Width, 20);
+			CGRect frame = Bounds;
+			var newFrame = new CGRect (Bounds.X, frame.Size.Height - 20, Bounds.Width, 20);
 			labelView.Frame = newFrame.Integral ();
-			RectangleF imageFrame = imageView.Frame;
+			CGRect imageFrame = imageView.Frame;
 			imageFrame.X = (newFrame.Size.Width - imageFrame.Size.Width) / 2;
 			imageView.Frame = imageFrame.Integral ();
 		}
@@ -113,7 +114,7 @@ namespace NSZombieApocalypse
 		{
 			if (labelView == null) {
 
-				labelView = new UILabel (RectangleF.Empty);
+				labelView = new UILabel (CGRect.Empty);
 				labelView.BackgroundColor = UIColor.Clear;
 				labelView.Font = UIFont.FromName ("HelveticaNeue", 18);
 				labelView.TextColor = UIColor.Black;
@@ -124,8 +125,4 @@ namespace NSZombieApocalypse
 			labelView.Text = labelString;
 		}
 	}
-	public delegate void TrackingStartedEventHandler (ButtonView button);
-	public delegate void TrackingContinuedEventHandler (ButtonView button, UITouch location);
-	public delegate void TrackingEndedEventHandler (ButtonView button, UITouch location);
 }
-

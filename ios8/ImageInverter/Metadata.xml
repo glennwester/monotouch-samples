@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<SampleMetadata>
+	<ID>86e9c8c0-a78a-42b9-b12f-7066af4267d5</ID>
+	<IsFullApplication>false</IsFullApplication>
+	<Level>Intermediate</Level>
+	<Tags>Extension, Platform Features, iOS8</Tags>
+	<Gallery>true</Gallery>
+	<SupportedPlatforms>iOS</SupportedPlatforms>
+	<MinimumLicenseRequirement>Starter</MinimumLicenseRequirement>
+	<Brief>This sample code shows how to use an Action extension with a view controller.</Brief>
+</SampleMetadata>

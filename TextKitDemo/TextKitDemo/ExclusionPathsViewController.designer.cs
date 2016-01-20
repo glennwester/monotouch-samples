@@ -1,11 +1,13 @@
 // WARNING
 //
-// This file has been generated automatically by Xamarin Studio to store outlets and
-// actions made in the UI designer. If it is removed, they will be lost.
-// Manual changes to this file may not be handled correctly.
+// This file has been generated automatically by Xamarin Studio from the outlets and
+// actions declared in your storyboard file.
+// Manual changes to this file will not be maintained.
 //
-using MonoTouch.Foundation;
+using Foundation;
+using System;
 using System.CodeDom.Compiler;
+using UIKit;
 
 namespace TextKitDemo
 {
@@ -13,22 +15,13 @@ namespace TextKitDemo
 	partial class ExclusionPathsViewController
 	{
 		[Outlet]
-		MonoTouch.UIKit.UIImageView imageView { get; set; }
+		UIKit.UIImageView imageView { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UITextView textView { get; set; }
-		
+		UIKit.UITextView textView { get; set; }
+
 		void ReleaseDesignerOutlets ()
 		{
-			if (textView != null) {
-				textView.Dispose ();
-				textView = null;
-			}
-
-			if (imageView != null) {
-				imageView.Dispose ();
-				imageView = null;
-			}
 		}
 	}
 }

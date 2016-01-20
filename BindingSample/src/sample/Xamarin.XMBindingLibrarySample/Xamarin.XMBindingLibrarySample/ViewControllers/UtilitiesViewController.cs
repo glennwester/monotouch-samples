@@ -16,15 +16,14 @@
 using System;
 using System.Linq;
 using MonoTouch.Dialog;
-using MonoTouch.Foundation;
+using Foundation;
 using XMBindingLibrarySample;
-using MonoTouch.UIKit;
+using UIKit;
 
 namespace Xamarin.XMBindingLibrarySample
 {
 	public class UtilitiesViewController : DialogViewController
 	{
-		XMUtilityCallback callback;
 		XMUtilities Utility;
 		
 		public UtilitiesViewController()

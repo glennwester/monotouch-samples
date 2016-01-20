@@ -33,6 +33,6 @@
 	<key>CFBundleIdentifier</key>
 	<string>com.xamarin.Hello_iPad</string>
 	<key>MinimumOSVersion</key>
-	<string>4.0</string>
+	<string>6.0</string>
 </dict>
 </plist>

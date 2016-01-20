@@ -3,8 +3,9 @@
 	<ID>ee804c5e-abe0-403d-88a0-d33344261eee</ID>
 	<IsFullApplication>false</IsFullApplication>
 	<Level>Beginning</Level>
-	<Tags>User Interface, Getting Started</Tags>
+	<Tags>User Interface, Getting Started, iOS8</Tags>
 	<SupportedPlatforms>iOS</SupportedPlatforms>
 	<LicenseRequirement>Starter</LicenseRequirement>
 	<Gallery>true</Gallery>
+	<Brief>Sample is a catalog exhibiting many views and controls in the UIKit framework.</Brief>
 </SampleMetadata>

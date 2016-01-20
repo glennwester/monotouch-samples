@@ -3,21 +3,20 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
-using MonoTouch.AudioUnit;
-using MonoTouch.CoreMidi;
-using MonoTouch.AudioToolbox;
+using AudioUnit;
+using CoreMidi;
+using AudioToolbox;
 
-using MonoTouch.Foundation;
-using MonoTouch.CoreFoundation;
-using MonoTouch.UIKit;
+using Foundation;
+using CoreFoundation;
+using UIKit;
 
 namespace MidiTest
 {
 	public class AudioTest
 	{
 		AUGraph processingGraph;
-		AudioUnit samplerUnit;
-		AudioUnit ioUnit;
+		AudioUnit.AudioUnit samplerUnit;
 
 		MidiClient virtualMidi;
 		MidiEndpoint virtualEndpoint;
@@ -46,14 +45,13 @@ namespace MidiTest
 			processingGraph.Open ();
 
 			processingGraph.ConnnectNodeInput (
-				sourceNode: samplerNode, 
-				sourceOutputNumber: 0, 
-				destNode: ioNode, 
+				sourceNode: samplerNode,
+				sourceOutputNumber: 0,
+				destNode: ioNode,
 				destInputNumber: 0);
 
 			samplerUnit = processingGraph.GetNodeInfo (samplerNode);
 
-			ioUnit = processingGraph.GetNodeInfo (ioNode);
 
 			return true;
 		}
@@ -129,7 +127,7 @@ namespace MidiTest
 					default:
 						throw new NotImplementedException ();
 					}
-						
+
 					samplerUnit.MusicDeviceMIDIEvent ((uint)midiStatus, (uint)note, (uint)velocity);
 
 					label.InvokeOnMainThread (delegate {
@@ -187,7 +185,7 @@ namespace MidiTest
 
 			sequence.SetMidiEndpoint (virtualEndpoint);
 
-			var presetUrl = CFUrl.FromFile (NSBundle.MainBundle.PathForResource ("gorts_filters", "sf2"));
+			var presetUrl = CFUrl.FromFile (NSBundle.MainBundle.PathForResource ("Gorts_Filters", "sf2"));
 
 			LoadFromDLSOrSoundFont (presetUrl, 10);
 

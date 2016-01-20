@@ -16,12 +16,16 @@
 		<string>Resources/icon-100.png</string>
 	</array>
 	<key>MinimumOSVersion</key>
-	<string>4.0</string>
+	<string>6.0</string>
 	<key>UIDeviceFamily</key>
 	<array>
 		<integer>1</integer>
 	</array>
 	<key>CFBundleIdentifier</key>
 	<string>com.xamarin.TableParts</string>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
 </dict>
 </plist>

@@ -5,4 +5,5 @@
 	<Level>Advanced</Level>
 	<Tags>Media, Graphics</Tags>
 	<Gallery>true</Gallery>
+	<Brief>Shows how to use GLKit to render OpenGL frames and AVFoundation to capture video from camera.</Brief>
 </SampleMetadata>

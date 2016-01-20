@@ -1,12 +1,12 @@
 using System;
-using System.Drawing;
+using CoreGraphics;
 using System.Collections.Generic;
 
-using MonoTouch.UIKit;
-using MonoTouch.GLKit;
-using MonoTouch.CoreMotion;
-using MonoTouch.Foundation;
-using MonoTouch.OpenGLES;
+using UIKit;
+using GLKit;
+using CoreMotion;
+using Foundation;
+using OpenGLES;
 
 using OpenTK.Graphics.ES20;
 using OpenTK;
@@ -26,7 +26,7 @@ namespace Stars
 		Vector3[] star = new Vector3 [NumStars];
 		int[] perm = new int [NumStars];
 
-		static readonly float[] gCubeVertexData = 
+		static readonly float[] gCubeVertexData =
 		{
 			// Data layout for each line below is:
 			// positionX, positionY, positionZ,     normalX, normalY, normalZ,
@@ -36,35 +36,35 @@ namespace Stars
 			0.5f, -0.5f, 0.5f,         1.0f, 0.0f, 0.0f,
 			0.5f, 0.5f, -0.5f,         1.0f, 0.0f, 0.0f,
 			0.5f, 0.5f, 0.5f,          1.0f, 0.0f, 0.0f,
-			
+
 			0.5f, 0.5f, -0.5f,         0.0f, 1.0f, 0.0f,
 			-0.5f, 0.5f, -0.5f,        0.0f, 1.0f, 0.0f,
 			0.5f, 0.5f, 0.5f,          0.0f, 1.0f, 0.0f,
 			0.5f, 0.5f, 0.5f,          0.0f, 1.0f, 0.0f,
 			-0.5f, 0.5f, -0.5f,        0.0f, 1.0f, 0.0f,
 			-0.5f, 0.5f, 0.5f,         0.0f, 1.0f, 0.0f,
-			
+
 			-0.5f, 0.5f, -0.5f,        -1.0f, 0.0f, 0.0f,
 			-0.5f, -0.5f, -0.5f,       -1.0f, 0.0f, 0.0f,
 			-0.5f, 0.5f, 0.5f,         -1.0f, 0.0f, 0.0f,
 			-0.5f, 0.5f, 0.5f,         -1.0f, 0.0f, 0.0f,
 			-0.5f, -0.5f, -0.5f,       -1.0f, 0.0f, 0.0f,
 			-0.5f, -0.5f, 0.5f,        -1.0f, 0.0f, 0.0f,
-			
+
 			-0.5f, -0.5f, -0.5f,       0.0f, -1.0f, 0.0f,
 			0.5f, -0.5f, -0.5f,        0.0f, -1.0f, 0.0f,
 			-0.5f, -0.5f, 0.5f,        0.0f, -1.0f, 0.0f,
 			-0.5f, -0.5f, 0.5f,        0.0f, -1.0f, 0.0f,
 			0.5f, -0.5f, -0.5f,        0.0f, -1.0f, 0.0f,
 			0.5f, -0.5f, 0.5f,         0.0f, -1.0f, 0.0f,
-			
+
 			0.5f, 0.5f, 0.5f,          0.0f, 0.0f, 1.0f,
 			-0.5f, 0.5f, 0.5f,         0.0f, 0.0f, 1.0f,
 			0.5f, -0.5f, 0.5f,         0.0f, 0.0f, 1.0f,
 			0.5f, -0.5f, 0.5f,         0.0f, 0.0f, 1.0f,
 			-0.5f, 0.5f, 0.5f,         0.0f, 0.0f, 1.0f,
 			-0.5f, -0.5f, 0.5f,        0.0f, 0.0f, 1.0f,
-			
+
 			0.5f, -0.5f, -0.5f,        0.0f, 0.0f, -1.0f,
 			-0.5f, -0.5f, -0.5f,       0.0f, 0.0f, -1.0f,
 			0.5f, 0.5f, -0.5f,         0.0f, 0.0f, -1.0f,
@@ -109,7 +109,6 @@ namespace Stars
 				Console.WriteLine ("Failed to create ES context");
 
 			var view = (GLKView) View;
-			view.DrawInRect += Draw;
 			view.Context = context;
 			view.DrawableDepthFormat = GLKViewDrawableDepthFormat.Format24;
 
@@ -129,7 +128,7 @@ namespace Stars
 			isDeviceMotionAvailable = motionManager.DeviceMotionAvailable;
 
 			// the label for roll, pitch and yaw reading
-			rpyLabel = new UILabel (new Rectangle (0, 0, (int) UIScreen.MainScreen.Bounds.Size.Width, 30));
+			rpyLabel = new UILabel (new CGRect (0, 0, (int) UIScreen.MainScreen.Bounds.Size.Width, 30));
 
 			rpyLabel.BackgroundColor = UIColor.Clear;
 			rpyLabel.TextColor = UIColor.White;
@@ -177,6 +176,23 @@ namespace Stars
 			return true;
 		}
 
+		public override void DrawInRect (GLKView view, CGRect rect)
+		{
+			if (!isDeviceMotionAvailable)
+				return;
+
+			GL.ClearColor (0.0f, 0.0f, 0.0f, 1.0f);
+			GL.Clear (ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
+			GL.Oes.BindVertexArray (vertexArray);
+
+			// Render the objects with GLKit
+			for (int i = 0; i < (NumCubes + NumStars); i++) {
+				var effect = effects [i];
+				effect.PrepareToDraw();
+				GL.DrawArrays (BeginMode.Triangles, 0, 36);
+			}
+		}
 
 		public void setupGL ()
 		{
@@ -242,8 +258,7 @@ namespace Stars
 				return;
 
 			var r = dm.Attitude.RotationMatrix;
-
-			float aspect = Math.Abs (View.Bounds.Size.Width / View.Bounds.Size.Height);
+			float aspect = (float)Math.Abs (View.Bounds.Size.Width / View.Bounds.Size.Height);
 			var projectionMatrix = Matrix4.CreatePerspectiveFieldOfView (MathHelper.DegreesToRadians (65.0f), aspect, NearZ, FarZ);
 
 			Matrix4 baseModelViewMatrix = new Matrix4 ((float) r.m11, (float) r.m21, (float) r.m31, 0,
@@ -256,9 +271,9 @@ namespace Stars
 			for (int i = 0; i < NumCubes; i++) {
 				var effect = effects [i];
 				effect.Transform.ProjectionMatrix = projectionMatrix;
-				var modelViewMatrix = Matrix4.Identity; 
+				var modelViewMatrix = Matrix4.Identity;
 
-				modelViewMatrix = Matrix4.Mult (modelViewMatrix, Matrix4.CreateTranslation ((float) perm [i] * 5.0f + 10.0f, (float) i, 0)); 
+				modelViewMatrix = Matrix4.Mult (modelViewMatrix, Matrix4.CreateTranslation ((float) perm [i] * 5.0f + 10.0f, (float) i, 0));
 				modelViewMatrix = Matrix4.Mult (modelViewMatrix, Matrix4.CreateFromAxisAngle (new Vector3 (0, 0, 1), (float) (2 * Math.PI * i / (float) NumCubes)));
 				modelViewMatrix = Matrix4.Mult (Matrix4.CreateFromAxisAngle (new Vector3 (1, 1, 1), rotation), modelViewMatrix);
 
@@ -280,29 +295,11 @@ namespace Stars
 
 			rotation += (float) TimeSinceLastUpdate * 0.8f;
 
-			rpyLabel.Text = String.Format ("roll: {0}° pitch: {1}° yaw: {2}°", 
+			rpyLabel.Text = String.Format ("roll: {0}° pitch: {1}° yaw: {2}°",
 			                               String.Format("{0:0.#}", dm.Attitude.Roll * RadiansToDegrees),
-			                               String.Format("{0:0.#}", dm.Attitude.Pitch * RadiansToDegrees), 
+			                               String.Format("{0:0.#}", dm.Attitude.Pitch * RadiansToDegrees),
 			                               String.Format("{0:0.#}", dm.Attitude.Yaw * RadiansToDegrees));
 			//...now we can print out coordinates
-		}
-		 
-		public void Draw (object sender, GLKViewDrawEventArgs args)
-		{
-			if (!isDeviceMotionAvailable)
-				return;
-
-			GL.ClearColor (0.0f, 0.0f, 0.0f, 1.0f);
-			GL.Clear (ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
-			GL.Oes.BindVertexArray (vertexArray);
-
-			// Render the objects with GLKit
-			for (int i = 0; i < (NumCubes + NumStars); i++) {
-				var effect = effects [i];
-				effect.PrepareToDraw();
-				GL.DrawArrays (BeginMode.Triangles, 0, 36);
-			}
 		}
 
 		public void generateRandomPermutation ()

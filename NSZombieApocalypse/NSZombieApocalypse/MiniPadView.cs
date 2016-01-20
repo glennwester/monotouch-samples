@@ -1,29 +1,29 @@
-using System;
-using System.Drawing;
-using System.Runtime.InteropServices;
-using System.Collections.Generic;
-using MonoTouch.UIKit;
-using MonoTouch.AudioToolbox;
-using MonoTouch.CoreGraphics;
-using MonoTouch.CoreFoundation;
-using MonoTouch.AudioUnit;
-using MonoTouch.Foundation;
-using MonoTouch.Dialog;
-using MonoTouch.AVFoundation;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Collections.Generic;
+
+using UIKit;
+using Foundation;
+using CoreGraphics;
+using AVFoundation;
 
 namespace NSZombieApocalypse
 {
-	public class MiniPadView : UIControl
+	public sealed class MiniPadView : UIControl
 	{
-		AVAudioPlayer newZombieSound, removeZombieSound;
-		List <WalkingDead> zombies;
+		readonly List <WalkingDead> zombies;
 
-		public MiniPadView (RectangleF frame): base(frame)
+		AVAudioPlayer newZombieSound, removeZombieSound;
+
+		public int ZombieCount {
+			get {
+				return zombies.Count;
+			}
+		}
+
+		public MiniPadView (CGRect frame): base(frame)
 		{
 			var image = UIImage.FromBundle ("iPadImage.png");
-			Frame = new RectangleF (Frame.Location, image.Size);
+			Frame = new CGRect (Frame.Location, image.Size);
 
 			ClipsToBounds = false;
 			var imageView = new UIImageView (image);
@@ -35,8 +35,8 @@ namespace NSZombieApocalypse
 			var audioRemoveZombie = NSUrl.FromFilename ("RemoveZombie.mp3");
 			newZombieSound = AVAudioPlayer.FromUrl (audioNewZombie);
 			removeZombieSound = AVAudioPlayer.FromUrl (audioRemoveZombie);
-
 		}
+
 		public void PauseZombies ()
 		{
 			foreach (var dead in zombies)
@@ -57,8 +57,8 @@ namespace NSZombieApocalypse
 
 		public void AddZombie ()
 		{
-			float chrome = 50;
-			var frame = new RectangleF (chrome, Frame.Size.Height - 160 - chrome, 80, 200);
+			const float chrome = 50;
+			var frame = new CGRect (chrome, Frame.Size.Height - 160 - chrome, 80, 200);
 			var dead = new WalkingDead (frame);
 			dead.WalkingDeadDidDisassemble += WalkingDeadDidDisassemble;
 			zombies.Add (dead);
@@ -72,10 +72,10 @@ namespace NSZombieApocalypse
 		}
 
 		public void RemoveZombie ()
-		{ 
+		{
 			WalkingDead zombie = zombies.Last ();
 
-			if (zombie != null) { 
+			if (zombie != null) {
 				zombies.Remove (zombie);
 				zombie.Disassemble ();
 			}
@@ -83,12 +83,5 @@ namespace NSZombieApocalypse
 			UIAccessibility.PostNotification (LayoutChangedNotification, null);
 			removeZombieSound.Play ();
 		}
-
-		public int ZombieCount {
-			get {
-				return zombies.Count;
-			}
-		}
 	}
 }
-

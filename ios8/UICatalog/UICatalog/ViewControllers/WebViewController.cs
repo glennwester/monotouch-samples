@@ -1,17 +1,18 @@
 using System;
 
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 
 namespace UICatalog
 {
-	public partial class WebViewController : UIViewController
+	[Register ("WebViewController")]
+	public class WebViewController : UIViewController
 	{
 		[Outlet]
-		private UIWebView WebView { get; set; }
+		UIWebView WebView { get; set; }
 
 		[Outlet]
-		private UITextField AddressTextField { get; set; }
+		UITextField AddressTextField { get; set; }
 
 		public WebViewController (IntPtr handle)
 			: base (handle)
@@ -34,14 +35,14 @@ namespace UICatalog
 				UIApplication.SharedApplication.NetworkActivityIndicatorVisible = false;
 		}
 
-		private void LoadAddressURL()
+		void LoadAddressURL ()
 		{
 			var requestURL = NSUrl.FromString (AddressTextField.Text);
 			var request = new NSUrlRequest (requestURL);
 			WebView.LoadRequest (request);
 		}
 
-		private void ConfigureWebView()
+		void ConfigureWebView ()
 		{
 			WebView.BackgroundColor = UIColor.White;
 			WebView.ScalesPageToFit = true;
@@ -50,20 +51,20 @@ namespace UICatalog
 
 		#region UIWebViewDelegate
 
-		[Export("webViewDidStartLoad:")]
-		private void WebViewDidStartLoad(UIWebView webView)
+		[Export ("webViewDidStartLoad:")]
+		void WebViewDidStartLoad (UIWebView webView)
 		{
 			UIApplication.SharedApplication.NetworkActivityIndicatorVisible = true;
 		}
 
-		[Export("webViewDidFinishLoad:")]
-		private void WebViewDidFinishLoad(UIWebView webView)
+		[Export ("webViewDidFinishLoad:")]
+		void WebViewDidFinishLoad (UIWebView webView)
 		{
 			UIApplication.SharedApplication.NetworkActivityIndicatorVisible = false;
 		}
 
-		[Export("webView:didFailLoadWithError:")]
-		private void OnLoadFailed(UIWebView webView, NSError error)
+		[Export ("webView:didFailLoadWithError:")]
+		void OnLoadFailed (UIWebView webView, NSError error)
 		{
 			// Report the error inside the web view.
 			var localizedErrorMessage = "An error occured:".Localize ();
@@ -78,8 +79,8 @@ namespace UICatalog
 		#region UITextFieldDelegate
 
 		// This helps dismiss the keyboard when the "Done" button is clicked.
-		[Export("textFieldShouldReturn:")]
-		private bool textFieldShouldReturn(UITextField textField)
+		[Export ("textFieldShouldReturn:")]
+		bool TextFieldShouldReturn (UITextField textField)
 		{
 			textField.ResignFirstResponder ();
 			LoadAddressURL ();

@@ -5,4 +5,5 @@
   <Level>Advanced</Level>
   <Tags>Media</Tags>
   <Gallery>true</Gallery>
+  <Brief>Show how to build an Audio Unit graph with Multichannel Mixer and RemoteIO unit.</Brief>
 </SampleMetadata>

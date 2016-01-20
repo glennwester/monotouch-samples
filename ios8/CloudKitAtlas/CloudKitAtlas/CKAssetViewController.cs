@@ -1,9 +1,9 @@
 using System;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-using MonoTouch.CoreFoundation;
+using Foundation;
+using UIKit;
+using CoreFoundation;
 using System.Drawing;
-using MonoTouch.CloudKit;
+using CloudKit;
 
 namespace CloudKitAtlas
 {
@@ -11,7 +11,24 @@ namespace CloudKitAtlas
 	{
 		public CloudManager CloudManager { get; set; }
 
-		private string assetRecordName;
+		string assetRecordName;
+
+		UIActivityIndicatorView ActivityIndicator {
+			get {
+				// derive the center x and y
+				nfloat centerX = View.Frame.Width / 2;
+				nfloat centerY = View.Frame.Height / 2;
+
+				var activitySpinner = new UIActivityIndicatorView(UIActivityIndicatorViewStyle.WhiteLarge);
+				activitySpinner.Frame = new CoreGraphics.CGRect (
+					centerX - (activitySpinner.Frame.Width / 2) ,
+					centerY - activitySpinner.Frame.Height - 20 ,
+					activitySpinner.Frame.Width ,
+					activitySpinner.Frame.Height);
+				activitySpinner.AutoresizingMask = UIViewAutoresizing.FlexibleMargins;
+				return activitySpinner;
+			}
+		}
 
 		public CKAssetViewController (IntPtr handle) : base (handle)
 		{
@@ -50,6 +67,11 @@ namespace CloudKitAtlas
 
 			imagePicker.SourceType = sourceType;
 			imagePicker.FinishedPickingMedia += async (picker, e) => {
+				var spinner = ActivityIndicator;
+				spinner.Hidden = false;
+				imagePicker.View.AddSubview (spinner);
+				spinner.StartAnimating ();
+
 				UIImage image = e.Info [UIImagePickerController.OriginalImage] as UIImage;
 				var newSize = new SizeF (512, 512);
 
@@ -73,7 +95,8 @@ namespace CloudKitAtlas
 				if (record == null)
 					return;
 
-				assetRecordName = record.RecordId.RecordName;
+				spinner.RemoveFromSuperview ();
+				assetRecordName = record.Id.RecordName;
 
 				var alert = new UIAlertView ( "CloudKitAtlas", "Successfully Uploaded", null, "OK", null);
 				alert.Show ();

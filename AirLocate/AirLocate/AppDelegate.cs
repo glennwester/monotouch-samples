@@ -1,13 +1,13 @@
 using System;
-using MonoTouch.CoreLocation;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using CoreLocation;
+using Foundation;
+using UIKit;
 
-namespace AirLocate {
-
+namespace AirLocate
+{
 	[Register ("AppDelegate")]
-	public partial class AppDelegate : UIApplicationDelegate {
-
+	public partial class AppDelegate : UIApplicationDelegate
+	{
 		CLLocationManager locationManager;
 
 		public override UIWindow Window {
@@ -19,6 +19,9 @@ namespace AirLocate {
 		{
 			locationManager = new CLLocationManager ();
 
+			if (UIDevice.CurrentDevice.CheckSystemVersion (8, 0)) {
+				locationManager.RequestWhenInUseAuthorization ();
+			}
 			// A user can transition in or out of a region while the application is not running.
 			// When this happens CoreLocation will launch the application momentarily, call this delegate method
 			// and we will let the user know via a local notification.
@@ -34,7 +37,7 @@ namespace AirLocate {
 
 					// If the application is in the foreground, it will get called back to ReceivedLocalNotification
 					// If its not, iOS will display the notification to the user.
-					UIApplication.SharedApplication.PresentLocationNotificationNow (notification);
+					UIApplication.SharedApplication.PresentLocalNotificationNow (notification);
 				}
 			};
 		}
@@ -53,4 +56,4 @@ namespace AirLocate {
 		}
 	}
 }
-	
+

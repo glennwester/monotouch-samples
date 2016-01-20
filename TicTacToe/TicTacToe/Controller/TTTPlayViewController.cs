@@ -1,6 +1,6 @@
 using System;
-using MonoTouch.UIKit;
-using MonoTouch.Foundation;
+using UIKit;
+using Foundation;
 
 namespace TicTacToe
 {
@@ -17,7 +17,7 @@ namespace TicTacToe
 			TabBarItem.Image = UIImage.FromBundle ("playTab");
 			TabBarItem.SelectedImage = UIImage.FromBundle ("playTabSelected");
 
-			NSNotificationCenter.DefaultCenter.AddObserver (TTTProfile.IconDidChangeNotification, iconDidChange);
+			NSNotificationCenter.DefaultCenter.AddObserver ((NSString)TTTProfile.IconDidChangeNotification, iconDidChange);
 		}
 
 		public static TTTPlayViewController FromProfile (TTTProfile profile, string profilePath)
@@ -58,44 +58,35 @@ namespace TicTacToe
 			};
 			view.AddSubview (gameView);
 
-			float topHeight = UIApplication.SharedApplication.StatusBarFrame.Size.Height;
+			nfloat topHeight = UIApplication.SharedApplication.StatusBarFrame.Size.Height;
 			UITabBar tabBar = TabBarController.TabBar;
-			float bottomHeight = tabBar.Translucent ? tabBar.Frame.Size.Height : 0;
-			NSDictionary metrics = NSDictionary.FromObjectsAndKeys (
-				new NSNumber[] { new NSNumber (topHeight + ControllerMargin),
-				new NSNumber (bottomHeight + ControllerMargin),
-				new NSNumber (ControllerMargin)
-			},
-				new NSString[] { new NSString ("topHeight"), new NSString ("bottomHeight"),
-				new NSString ("margin")
-			}
-			);
-			NSDictionary bindings = NSDictionary.FromObjectsAndKeys (
-				new NSObject[] { newButton, pauseButton, gameView },
-				new NSString [] { 
-				new NSString ("newButton"), new NSString ("pauseButton"),
-				new NSString ("gameView")
-			}
-			);
-			view.AddConstraints (NSLayoutConstraint.FromVisualFormat (
-				"|-margin-[gameView]-margin-|", (NSLayoutFormatOptions)0,
-				metrics, bindings
-			));
-			view.AddConstraints (NSLayoutConstraint.FromVisualFormat (
-				"|-margin-[pauseButton(==newButton)]-[newButton]-margin-|",
-				(NSLayoutFormatOptions)0, metrics, bindings
-			));
-			view.AddConstraints (NSLayoutConstraint.FromVisualFormat (
-				"V:|-topHeight-[gameView]-margin-[newButton]-bottomHeight-|",
-				(NSLayoutFormatOptions)0, metrics, bindings
-			));
-			view.AddConstraint (NSLayoutConstraint.Create (pauseButton,
-			                                               NSLayoutAttribute.Baseline,
-			                                               NSLayoutRelation.Equal,
-			                                               newButton,
-			                                               NSLayoutAttribute.Baseline,
-			                                               1f,
-			                                               0f));
+			nfloat bottomHeight = tabBar.Translucent ? tabBar.Frame.Size.Height : 0;
+
+			var mTopHeight = new NSNumber (topHeight + ControllerMargin);
+			var mBottomHeight = new NSNumber (bottomHeight + ControllerMargin);
+			var mMargin = new NSNumber (ControllerMargin);
+
+			view.AddConstraints (NSLayoutConstraint.FromVisualFormat ("|-margin-[gameView]-margin-|",
+				(NSLayoutFormatOptions)0,
+				"margin", mMargin,
+				"gameView", gameView));
+			view.AddConstraints (NSLayoutConstraint.FromVisualFormat ("|-margin-[pauseButton(==newButton)]-[newButton]-margin-|",
+				(NSLayoutFormatOptions)0,
+				"margin", mMargin,
+				"pauseButton", pauseButton,
+				"newButton", newButton));
+			view.AddConstraints (NSLayoutConstraint.FromVisualFormat ("V:|-topHeight-[gameView]-margin-[newButton]-bottomHeight-|",
+				(NSLayoutFormatOptions)0,
+				"topHeight", mTopHeight,
+				"gameView", gameView,
+				"margin", mMargin,
+				"newButton", newButton,
+				"bottomHeight", mBottomHeight));
+			view.AddConstraint (NSLayoutConstraint.Create (
+				pauseButton, NSLayoutAttribute.Baseline,
+				NSLayoutRelation.Equal,
+				newButton, NSLayoutAttribute.Baseline,
+				1f, 0f));
 
 			View = view;
 		}

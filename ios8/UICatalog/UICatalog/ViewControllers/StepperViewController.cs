@@ -1,26 +1,31 @@
 using System;
-
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
 using System.Collections.Generic;
+
+using Foundation;
+using UIKit;
 
 namespace UICatalog
 {
-	public partial class StepperViewController : UITableViewController
+	[Register ("StepperViewController")]
+	public class StepperViewController : UITableViewController
 	{
 		[Outlet]
-		private UIStepper DefaultStepper { get; set; }
-		[Outlet]
-		private UIStepper TintedStepper { get; set; }
-		[Outlet]
-		private UIStepper CustomStepper { get; set; }
+		UIStepper DefaultStepper { get; set; }
 
 		[Outlet]
-		private UILabel DefaultStepperLabel { get; set; }
+		UIStepper TintedStepper { get; set; }
+
 		[Outlet]
-		private UILabel TintedStepperLabel { get; set; }
+		UIStepper CustomStepper { get; set; }
+
 		[Outlet]
-		private UILabel CustomStepperLabel { get; set; }
+		UILabel DefaultStepperLabel { get; set; }
+
+		[Outlet]
+		UILabel TintedStepperLabel { get; set; }
+
+		[Outlet]
+		UILabel CustomStepperLabel { get; set; }
 
 		public StepperViewController (IntPtr handle)
 			: base (handle)
@@ -36,7 +41,7 @@ namespace UICatalog
 			ConfigureCustomStepper ();
 		}
 
-		private void ConfigureDefaultStepper()
+		void ConfigureDefaultStepper ()
 		{
 			DefaultStepper.Value = 0;
 			DefaultStepper.MinimumValue = 0;
@@ -47,14 +52,14 @@ namespace UICatalog
 			DefaultStepper.ValueChanged += OnStepperValueChange;
 		}
 
-		private void ConfigureTintedStepper()
+		void ConfigureTintedStepper ()
 		{
 			TintedStepper.TintColor = ApplicationColors.Blue;
 			TintedStepperLabel.Text = GetStepperLabelText (TintedStepper);
 			TintedStepper.ValueChanged += OnStepperValueChange;
 		}
 
-		private void ConfigureCustomStepper()
+		void ConfigureCustomStepper ()
 		{
 			// Set the background image.
 			CustomStepper.SetBackgroundImage (UIImage.FromBundle ("stepper_and_segment_background"), UIControlState.Normal);
@@ -74,14 +79,14 @@ namespace UICatalog
 			CustomStepper.ValueChanged += OnStepperValueChange;
 		}
 
-		private void OnStepperValueChange(object sender, EventArgs e)
+		void OnStepperValueChange (object sender, EventArgs e)
 		{
 			Console.WriteLine ("A stepper changed its value: {0}.", sender);
 
 			var stepper = (UIStepper)sender;
 
 			// A mapping from a stepper to its associated label.
-			var stepperMapping = new Dictionary<UIStepper, UILabel> { 
+			var stepperMapping = new Dictionary<UIStepper, UILabel> {
 				{ DefaultStepper, DefaultStepperLabel },
 				{ TintedStepper, TintedStepperLabel },
 				{ CustomStepper, CustomStepperLabel }
@@ -90,7 +95,7 @@ namespace UICatalog
 			stepperMapping [stepper].Text = GetStepperLabelText (stepper);
 		}
 
-		private string GetStepperLabelText(UIStepper stepper)
+		string GetStepperLabelText (UIStepper stepper)
 		{
 			return ((int)stepper.Value).ToString ();
 		}

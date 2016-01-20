@@ -1,8 +1,8 @@
 using System;
-using System.Drawing;
+using CoreGraphics;
 
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 
 namespace TextKitDemo
 {
@@ -10,11 +10,22 @@ namespace TextKitDemo
 	{
 		public CollectionViewCell (IntPtr handle) : base (handle)
 		{
+			Initialize ();
+		}
+
+		[Export ("initWithCoder:")]
+		public CollectionViewCell (NSCoder coder) : base (coder)
+		{
+			Initialize ();
+		}
+
+		void Initialize ()
+		{
 			BackgroundColor = UIColor.DarkGray;
 			Layer.CornerRadius = 5;
 
 			UIApplication.Notifications.ObserveContentSizeCategoryChanged (delegate {
-				CalculateAndSetFonts (); 
+				CalculateAndSetFonts ();
 			});
 		}
 

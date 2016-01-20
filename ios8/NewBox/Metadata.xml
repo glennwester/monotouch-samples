@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<SampleMetadata>
+	<ID>8e02c07a-00ec-4782-9b02-569eafcd4be3</ID>
+	<IsFullApplication>false</IsFullApplication>
+	<Level>Advanced</Level>
+	<Tags>Extension, Platform Features, Cloud, iOS8</Tags>
+	<SupportedPlatforms>iOS</SupportedPlatforms>
+	<Gallery>true</Gallery>
+	<MinimumLicenseRequirement>Starter</MinimumLicenseRequirement>
+	<Brief>This sample shows how to сreate Document Provider extensions and work with iCloud storage provider.</Brief>
+</SampleMetadata>

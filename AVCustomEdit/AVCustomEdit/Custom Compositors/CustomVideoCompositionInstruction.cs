@@ -1,8 +1,6 @@
-using System;
-using MonoTouch.AVFoundation;
-using MonoTouch.CoreMedia;
-using MonoTouch.Foundation;
-
+using AVFoundation;
+using CoreMedia;
+using Foundation;
 
 namespace AVCustomEdit
 {
@@ -11,11 +9,11 @@ namespace AVCustomEdit
 		public int ForegroundTrackID;
 		public int BackgroundTrackID;
 
-		int passthroughTrackID;
-		NSNumber [] requiredSourceTrackIDs;
 		CMTimeRange timeRange;
-		bool enablePostProcessing;
-		bool containsTweening;
+		readonly int passthroughTrackID;
+		readonly NSNumber [] requiredSourceTrackIDs;
+		readonly bool enablePostProcessing;
+		readonly bool containsTweening;
 
 		public override int PassthroughTrackID {
 			get {
@@ -45,12 +43,11 @@ namespace AVCustomEdit
 			}
 		}
 
-		public CustomVideoCompositionInstruction () : base ()
+		public CustomVideoCompositionInstruction ()
 		{
-
 		}
 
-		public CustomVideoCompositionInstruction (int passthroughTrackID, CMTimeRange timeRange) : base()
+		public CustomVideoCompositionInstruction (int passthroughTrackID, CMTimeRange timeRange)
 		{
 			this.passthroughTrackID = passthroughTrackID;
 			requiredSourceTrackIDs = null;
@@ -59,7 +56,7 @@ namespace AVCustomEdit
 			enablePostProcessing = false;
 		}
 
-		public CustomVideoCompositionInstruction(NSNumber [] sourceTracksIDS, CMTimeRange timeRange) : base()
+		public CustomVideoCompositionInstruction(NSNumber [] sourceTracksIDS, CMTimeRange timeRange)
 		{
 			requiredSourceTrackIDs = sourceTracksIDS;
 			passthroughTrackID = 0;
@@ -69,4 +66,3 @@ namespace AVCustomEdit
 		}
 	}
 }
-

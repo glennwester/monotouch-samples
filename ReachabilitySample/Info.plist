@@ -13,8 +13,6 @@
 		<string>Resources/icon-50.png</string>
 		<string>Resources/icon-100.png</string>
 	</array>
-	<key>MinimumOSVersion</key>
-	<string>3.0</string>
 	<key>NSMainNibFile</key>
 	<string>MainWindow</string>
 	<key>CFBundleDisplayName</key>
@@ -25,5 +23,13 @@
 	<array>
 		<integer>1</integer>
 	</array>
+	<key>MinimumOSVersion</key>
+	<string>6.0</string>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UIMainStoryboardFile</key>
+	<string>Main</string>
 </dict>
 </plist>

@@ -6,4 +6,5 @@
 	<Tags>Games</Tags>
     <LicenseRequirement>Indie</LicenseRequirement>
 	<Gallery>true</Gallery>
+	<Brief>Demonstrates how to customize UIKit and build custom controls.</Brief>
 </SampleMetadata>

@@ -1,12 +1,11 @@
 using System;
-using System.Drawing;
+using CoreGraphics;
 
-using MonoTouch.Foundation;
-using MonoTouch.AVFoundation;
-using MonoTouch.CoreFoundation;
-using MonoTouch.CoreVideo;
-using MonoTouch.CoreMedia;
-using MonoTouch.CoreGraphics;
+using Foundation;
+using AVFoundation;
+using CoreFoundation;
+using CoreVideo;
+using CoreMedia;
 
 namespace AVCustomEdit
 {
@@ -43,56 +42,40 @@ namespace AVCustomEdit
 		DispatchQueue renderingQueue;
 		DispatchQueue renderContextQueue;
 		AVVideoCompositionRenderContext renderContext;
-		CVPixelBuffer previousBuffer;
+		//CVPixelBuffer previousBuffer;
 		public OpenGLRenderer oglRender;
 
 		public CustomVideoCompositor (IntPtr handle) : base (handle)
 		{
 			renderingQueue = new DispatchQueue ("com.apple.aplcustomvideocompositor.renderingqueue");
 			renderContextQueue = new DispatchQueue ("com.apple.aplcustomvideocompositor.rendercontextqueue");
-			previousBuffer = null;
 			renderContextDidChange = false;
 		}
 
-		public CustomVideoCompositor (AVVideoComposition videoComposition) : base()
+		public CustomVideoCompositor (AVVideoComposition videoComposition)
 		{
 			renderingQueue = new DispatchQueue ("com.apple.aplcustomvideocompositor.renderingqueue");
 			renderContextQueue = new DispatchQueue ("com.apple.aplcustomvideocompositor.rendercontextqueue");
-			previousBuffer = null;
 			renderContextDidChange = false;
 		}
 
 		public override NSDictionary SourcePixelBufferAttributes ()
 		{
-			return NSDictionary.FromObjectsAndKeys (
-				new [] {
-					NSNumber.FromUInt32((UInt32)CVPixelFormatType.CV420YpCbCr8BiPlanarVideoRange), 
-					NSNumber.FromBoolean(true)
-				}, new [] {
-					CVPixelBuffer.PixelFormatTypeKey, 
-					CVPixelBuffer.OpenGLESCompatibilityKey, 
-				}
-			);
+			return new NSDictionary (CVPixelBuffer.PixelFormatTypeKey, CVPixelFormatType.CV420YpCbCr8BiPlanarVideoRange,
+				CVPixelBuffer.OpenGLESCompatibilityKey, true);
 		}
 
 		public override NSDictionary RequiredPixelBufferAttributesForRenderContext ()
 		{
-			return NSDictionary.FromObjectsAndKeys (
-				new [] {
-					NSNumber.FromUInt32 ((UInt32)CVPixelFormatType.CV420YpCbCr8BiPlanarVideoRange), 
-					NSNumber.FromBoolean (true)
-				}, new [] {
-					CVPixelBuffer.PixelFormatTypeKey,
-					CVPixelBuffer.OpenGLESCompatibilityKey
-				}
-			);
+			return new NSDictionary (CVPixelBuffer.PixelFormatTypeKey, CVPixelFormatType.CV420YpCbCr8BiPlanarVideoRange,
+				CVPixelBuffer.OpenGLESCompatibilityKey, true);
 		}
 
 		public override void RenderContextChanged (AVVideoCompositionRenderContext newRenderContext)
 		{
 			renderContextQueue.DispatchSync (() => {
 				renderContext = newRenderContext;
-				renderContextDidChange = true;			
+				renderContextDidChange = true;
 			});
 		}
 
@@ -103,7 +86,7 @@ namespace AVCustomEdit
 					asyncVideoCompositionRequest.FinishCancelledRequest();
 				else
 				{
-					NSError error = null;
+					NSError error;
 					CVPixelBuffer resultPixels = newRenderedPixelBufferForRequest( asyncVideoCompositionRequest, out error);
 					if(resultPixels != null){
 						asyncVideoCompositionRequest.FinishWithComposedVideoFrame(resultPixels);
@@ -113,7 +96,7 @@ namespace AVCustomEdit
 						asyncVideoCompositionRequest.FinishWithError(error);
 					}
 
-				}		
+				}
 			});
 		}
 
@@ -127,17 +110,16 @@ namespace AVCustomEdit
 
 		//Utilities methods
 
-		double factorForTimeInRange( CMTime time, CMTimeRange range)
+		static double FactorForTimeInRange( CMTime time, CMTimeRange range)
 		{
 			CMTime elapsed = CMTime.Subtract (time, range.Start);
 			return elapsed.Seconds / range.Duration.Seconds;
 		}
 
-
 		CVPixelBuffer newRenderedPixelBufferForRequest (AVAsynchronousVideoCompositionRequest request, out NSError error )
 		{
-			CVPixelBuffer dstPixels = null;
-			float tweenFactor =(float) factorForTimeInRange (request.CompositionTime, request.VideoCompositionInstruction.TimeRange);
+			CVPixelBuffer dstPixels;
+			float tweenFactor =(float) FactorForTimeInRange (request.CompositionTime, request.VideoCompositionInstruction.TimeRange);
 
 			var currentInstruction = (CustomVideoCompositionInstruction)request.VideoCompositionInstruction;
 
@@ -148,7 +130,7 @@ namespace AVCustomEdit
 
 			if (renderContextDidChange) {
 				var renderSize = renderContext.Size;
-				var destinationSize = new SizeF (dstPixels.Width, dstPixels.Height);
+				var destinationSize = new CGSize (dstPixels.Width, dstPixels.Height);
 				var renderContextTransform = new CGAffineTransform (renderSize.Width / 2, 0, 0, renderSize.Height / 2, renderSize.Width / 2, renderSize.Height / 2);
 				var destinationTransform = new CGAffineTransform (2 / destinationSize.Width, 0, 0, 2 / destinationSize.Height, -1, -1);
 				var normalizedRenderTransform = CGAffineTransform.Multiply( CGAffineTransform.Multiply(renderContextTransform, renderContext.RenderTransform), destinationTransform);

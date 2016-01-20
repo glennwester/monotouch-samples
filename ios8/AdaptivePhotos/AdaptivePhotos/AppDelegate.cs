@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using System.Reflection;
 
 namespace AdaptivePhotos
@@ -10,32 +10,32 @@ namespace AdaptivePhotos
 	[Register ("AppDelegate")]
 	public partial class AppDelegate : UIApplicationDelegate
 	{
-		private UIWindow window;
+		UIWindow window;
 
 		public override bool FinishedLaunching (UIApplication app, NSDictionary options)
 		{
 			var url = NSBundle.MainBundle.PathForResource ("User", "plist");
 			var userDictionary = NSDictionary.FromFile (url);
-			var user = AAPLUser.UserWithDictionary (userDictionary);
+			var user = User.UserWithDictionary (userDictionary);
 
 			var controller = new CustomSplitViewController ();
 			controller.Delegate = new SplitViewControllerDelegate ();
 
-			var master = new AAPLListTableViewController (user);
+			var master = new ListTableViewController (user);
 			var masterNav = new CustomNavigationController (master);
-			var detail = new AAPLEmptyViewController ();
+			var detail = new EmptyViewController ();
 
 			controller.ViewControllers = new UIViewController[] { masterNav, detail };
 			controller.PreferredDisplayMode = UISplitViewControllerDisplayMode.AllVisible;
 
-			var traitController = new AAPLTraitOverrideViewController () {
+			var traitController = new TraitOverrideViewController () {
 				ViewController = controller
 			};
 
 			window = new UIWindow (UIScreen.MainScreen.Bounds);
 			window.RootViewController = traitController;
 			window.MakeKeyAndVisible ();
-			
+
 			return true;
 		}
 
@@ -44,7 +44,7 @@ namespace AdaptivePhotos
 			public override bool CollapseSecondViewController (UISplitViewController splitViewController,
 			                                                   UIViewController secondaryViewController, UIViewController primaryViewController)
 			{
-				AAPLPhoto photo = ((CustomViewController)secondaryViewController).Aapl_containedPhoto (null);
+				Photo photo = ((CustomViewController)secondaryViewController).ContainedPhoto (null);
 				if (photo == null) {
 					return true;
 				}
@@ -53,7 +53,7 @@ namespace AdaptivePhotos
 					var viewControllers = new List<UIViewController> ();
 					foreach (var controller in ((UINavigationController)primaryViewController).ViewControllers) {
 						var type = controller.GetType ();
-						MethodInfo method = type.GetMethod ("Aapl_containsPhoto");
+						MethodInfo method = type.GetMethod ("ContainsPhoto");
 
 						if ((bool)method.Invoke (controller, new object[] { null })) {
 							viewControllers.Add (controller);
@@ -72,7 +72,7 @@ namespace AdaptivePhotos
 				if (primaryViewController.GetType () == typeof(CustomNavigationController)) {
 					foreach (var controller in ((CustomNavigationController)primaryViewController).ViewControllers) {
 						var type = controller.GetType ();
-						MethodInfo method = type.GetMethod ("Aapl_containedPhoto");
+						MethodInfo method = type.GetMethod ("ContainedPhoto");
 
 						if (method.Invoke (controller, new object[] { null }) != null) {
 							return null;
@@ -80,7 +80,7 @@ namespace AdaptivePhotos
 					}
 				}
 
-				return new AAPLEmptyViewController ();
+				return new EmptyViewController ();
 			}
 		}
 	}

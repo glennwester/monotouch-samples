@@ -1,14 +1,15 @@
 using System;
 
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 
 namespace UICatalog
 {
-	public partial class CustomSearchBarViewController : UIViewController
+	[Register ("CustomSearchBarViewController")]
+	public class CustomSearchBarViewController : UIViewController
 	{
 		[Outlet]
-		private UISearchBar SearchBar { get; set; }
+		UISearchBar SearchBar { get; set; }
 
 		public CustomSearchBarViewController (IntPtr handle)
 			: base (handle)
@@ -22,7 +23,7 @@ namespace UICatalog
 			ConfigureSearchBar ();
 		}
 
-		private void ConfigureSearchBar()
+		void ConfigureSearchBar ()
 		{
 			SearchBar.ShowsCancelButton = true;
 			SearchBar.ShowsBookmarkButton = true;
@@ -40,22 +41,22 @@ namespace UICatalog
 
 		#region UISearchBarDelegate
 
-		[Export("searchBarSearchButtonClicked:")]
-		private void OnSearchBarSearchButtonClicked(UISearchBar searchBar)
+		[Export ("searchBarSearchButtonClicked:")]
+		void OnSearchBarSearchButtonClicked (UISearchBar searchBar)
 		{
 			Console.WriteLine ("The custom search bar keyboard search button was tapped: {0}.", searchBar);
 			searchBar.ResignFirstResponder ();
 		}
 
-		[Export("searchBarCancelButtonClicked:")]
-		private void OnSearchBarCancelButtonClicked(UISearchBar searchBar)
+		[Export ("searchBarCancelButtonClicked:")]
+		void OnSearchBarCancelButtonClicked (UISearchBar searchBar)
 		{
 			Console.WriteLine ("The custom search bar cancel button was tapped.");
 			searchBar.ResignFirstResponder ();
 		}
 
-		[Export("searchBarBookmarkButtonClicked:")]
-		private void OnSearchBarBookmarkButtonClicked(UISearchBar searchBar)
+		[Export ("searchBarBookmarkButtonClicked:")]
+		void OnSearchBarBookmarkButtonClicked (UISearchBar searchBar)
 		{
 			Console.WriteLine ("The custom bookmark button inside the search bar was tapped.");
 		}

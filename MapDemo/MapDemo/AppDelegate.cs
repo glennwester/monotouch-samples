@@ -1,0 +1,16 @@
+using Foundation;
+using UIKit;
+
+namespace MapDemo
+{
+
+	[Register ("AppDelegate")]
+	public class AppDelegate : UIApplicationDelegate
+	{
+		public override UIWindow Window {
+			get;
+			set;
+		}
+	}
+}
+

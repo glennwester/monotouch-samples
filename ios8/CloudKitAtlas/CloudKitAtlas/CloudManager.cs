@@ -1,29 +1,29 @@
 ﻿using System;
-using MonoTouch.Foundation;
-using MonoTouch.CloudKit;
-using MonoTouch.CoreLocation;
+using Foundation;
+using CloudKit;
+using CoreLocation;
 using System.Collections.Generic;
-using MonoTouch.CoreFoundation;
+using CoreFoundation;
 using System.Threading.Tasks;
-using MonoTouch.UIKit;
+using UIKit;
 
 namespace CloudKitAtlas
 {
 	public class CloudManager : NSObject
 	{
-		private const string PhotoAssetRecordType = "Photos";
-		private const string PhotoAssetField = "photo";
+		const string PhotoAssetRecordType = "Photos";
+		const string PhotoAssetField = "photo";
 
-		private const string ItemRecordType = "Items";
-		private const string NameField = "name";
-		private const string LocationField = "location";
+		const string ItemRecordType = "Items";
+		const string NameField = "name";
+		const string LocationField = "location";
 
-		private const string ReferenceSubItemsRecordType = "ReferenceSubItems";
+		const string ReferenceSubItemsRecordType = "ReferenceSubItems";
 
-		private CKContainer container;
-		private CKDatabase publicDatabase;
+		CKContainer container;
+		CKDatabase publicDatabase;
 
-		public bool Subscribed { 
+		public bool Subscribed {
 			get {
 				return NSUserDefaults.StandardUserDefaults.ValueForKey (new NSString("subscriptionID")) != null;
 			}
@@ -114,7 +114,7 @@ namespace CloudKitAtlas
 		public async Task DeleteAsync (CKRecord record)
 		{
 			try {
-				await publicDatabase.DeleteRecordAsync (record.RecordId);
+				await publicDatabase.DeleteRecordAsync (record.Id);
 				Console.WriteLine ("Successfuly deleted record!");
 			} catch (Exception e) {
 				Console.WriteLine ("An error occured: {0}", e.Message);

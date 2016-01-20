@@ -1,10 +1,11 @@
 // WARNING
 //
-// This file has been generated automatically by MonoDevelop to store outlets and
-// actions made in the Xcode designer. If it is removed, they will be lost.
+// This file has been generated automatically by Xamarin Studio to store outlets and
+// actions made in the UI designer. If it is removed, they will be lost.
 // Manual changes to this file may not be handled correctly.
 //
-using MonoTouch.Foundation;
+using Foundation;
+using System.CodeDom.Compiler;
 
 namespace Sound
 {
@@ -12,19 +13,19 @@ namespace Sound
 	partial class SoundViewController
 	{
 		[Outlet]
-		MonoTouch.UIKit.UIButton StartRecordingButton { get; set; }
+		UIKit.UILabel LengthOfRecordingLabel { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UIButton StopRecordingButton { get; set; }
+		UIKit.UIButton PlayRecordedSoundButton { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UIButton PlayRecordedSoundButton { get; set; }
+		UIKit.UILabel RecordingStatusLabel { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UILabel RecordingStatusLabel { get; set; }
+		UIKit.UIButton StartRecordingButton { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UILabel LengthOfRecordingLabel { get; set; }
+		UIKit.UIButton StopRecordingButton { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{

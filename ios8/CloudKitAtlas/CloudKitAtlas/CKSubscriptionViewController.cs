@@ -1,6 +1,6 @@
 using System;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 
 namespace CloudKitAtlas
 {
@@ -18,7 +18,7 @@ namespace CloudKitAtlas
 
 			subscriptionSwitch.On = CloudManager.Subscribed;
 		}
-			
+
 		partial void SubscriptionPreferenceUpdated (UISwitch sender)
 		{
 			if (sender.On) {

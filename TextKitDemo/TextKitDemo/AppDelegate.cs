@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 
 namespace TextKitDemo
 {
@@ -10,6 +10,11 @@ namespace TextKitDemo
 	public partial class AppDelegate : UIApplicationDelegate
 	{
 		public override UIWindow Window { get; set; }
+
+		public override bool FinishedLaunching (UIApplication application, NSDictionary launchOptions)
+		{
+			return true;
+		}
 
 		static void Main (string[] args)
 		{

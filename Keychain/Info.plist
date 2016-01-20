@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>MinimumOSVersion</key>
-	<string>3.1</string>
 	<key>NSMainNibFile</key>
 	<string>MainWindow</string>
 	<key>CFBundleIconFiles</key>
@@ -30,5 +28,15 @@
 	<array>
 		<integer>1</integer>
 	</array>
+	<key>MinimumOSVersion</key>
+	<string>6.0</string>
+	<key>CFBundleDisplayName</key>
+	<string>Keychain</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.xamarin.Keychain</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleVersion</key>
+	<string>1.0</string>
 </dict>
 </plist>

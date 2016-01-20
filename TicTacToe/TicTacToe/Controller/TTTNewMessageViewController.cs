@@ -1,7 +1,7 @@
 using System;
-using MonoTouch.UIKit;
-using System.Drawing;
-using MonoTouch.Foundation;
+using UIKit;
+using CoreGraphics;
+using Foundation;
 
 namespace TicTacToe
 {
@@ -23,7 +23,7 @@ namespace TicTacToe
 			UIView baseView = new UIView ();
 			baseView.BackgroundColor = UIColor.FromWhiteAlpha (0f, .15f);
 
-			UIView view = new UIView (new RectangleF (-100f, -50f, 240f, 120f)) {
+			UIView view = new UIView (new CGRect (-100f, -50f, 240f, 120f)) {
 				AutoresizingMask = UIViewAutoresizing.FlexibleLeftMargin |
 				UIViewAutoresizing.FlexibleBottomMargin |
 				UIViewAutoresizing.FlexibleTopMargin |
@@ -50,26 +50,21 @@ namespace TicTacToe
 			};
 			view.AddSubview (messageTextView);
 
-			NSDictionary views = NSDictionary.FromObjectsAndKeys (
-				new NSObject[] { postButton, cancelButton, messageTextView },
-				new NSString[] { new NSString ("postButton"),
-				new NSString ("cancelButton"),
-				new NSString ("messageTextView")
-			}
-			);
-
-			baseView.AddConstraints (NSLayoutConstraint.FromVisualFormat (
-				"|-8-[messageTextView]-8-|", (NSLayoutFormatOptions)0, null, views)
-			);
-			baseView.AddConstraints (NSLayoutConstraint.FromVisualFormat (
-				"|-8-[cancelButton]->=20-[postButton]-8-|", (NSLayoutFormatOptions)0, null, views)
-			);
-			baseView.AddConstraints (NSLayoutConstraint.FromVisualFormat (
-				"V:|-8-[messageTextView]-[cancelButton]-8-|", (NSLayoutFormatOptions)0, null, views)
-			);
-			baseView.AddConstraints (NSLayoutConstraint.FromVisualFormat (
-				"V:|-8-[messageTextView]-[postButton]-8-|", (NSLayoutFormatOptions)0, null, views)
-			);
+			baseView.AddConstraints (NSLayoutConstraint.FromVisualFormat ("|-8-[messageTextView]-8-|",
+				(NSLayoutFormatOptions)0,
+				"messageTextView", messageTextView));
+			baseView.AddConstraints (NSLayoutConstraint.FromVisualFormat ("|-8-[cancelButton]->=20-[postButton]-8-|",
+				(NSLayoutFormatOptions)0,
+				"cancelButton", cancelButton,
+				"postButton", postButton));
+			baseView.AddConstraints (NSLayoutConstraint.FromVisualFormat ("V:|-8-[messageTextView]-[cancelButton]-8-|",
+				(NSLayoutFormatOptions)0,
+				"messageTextView", messageTextView,
+				"cancelButton", cancelButton));
+			baseView.AddConstraints (NSLayoutConstraint.FromVisualFormat ("V:|-8-[messageTextView]-[postButton]-8-|",
+				(NSLayoutFormatOptions)0,
+				"messageTextView", messageTextView,
+				"postButton", postButton));
 
 			View = baseView;
 		}
@@ -99,7 +94,7 @@ namespace TicTacToe
 			UIView.Animate (0.3f, delegate {
 				View.Alpha = 0f;
 				currentMessageSourceWindow.TintAdjustmentMode = UIViewTintAdjustmentMode.Automatic;
-			}, 
+			},
 			                delegate {
 				currentMessageWindow = null;
 				currentMessageSourceWindow.MakeKeyAndVisible ();

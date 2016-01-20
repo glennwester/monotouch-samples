@@ -5,4 +5,5 @@
 	<Level>Advanced</Level>
 	<Tags>Media</Tags>
 	<Gallery>true</Gallery>
+	<Brief>AVCaptureFrames demonstrates AV Foundation APIs to display a real-time capture from camera.</Brief>
 </SampleMetadata>

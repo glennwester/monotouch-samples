@@ -1,13 +1,10 @@
 using System;
-using MonoTouch.UIKit;
 using OpenTK;
-using MonoTouch.OpenGLES;
-using MonoTouch.GLKit;
-using MonoTouch;
+using OpenGLES;
+using GLKit;
 using OpenTK.Graphics.ES20;
-using MonoTouch.CoreGraphics;
-using System.Drawing;
-using MonoTouch.Foundation;
+using Foundation;
+using CoreGraphics;
 
 namespace GLKBaseEffectDrawingTexture
 {
@@ -36,10 +33,10 @@ namespace GLKBaseEffectDrawingTexture
 			if (context == null)
 				Console.WriteLine ("Failed to create ES context");
 
-			GLKView view = View as GLKView;
+			var view = View as GLKView;
 			view.Context = context;
 			view.DrawableDepthFormat = GLKViewDrawableDepthFormat.Format24;
-			view.DrawInRect += Draw;
+			view.Delegate = this;
 
 			setupGL ();
 		}
@@ -61,7 +58,7 @@ namespace GLKBaseEffectDrawingTexture
 
 			GL.GenBuffers (1, out vertexBuffer);
 			GL.BindBuffer (BufferTarget.ArrayBuffer, vertexBuffer);
-			GL.BufferData (BufferTarget.ArrayBuffer, (IntPtr) (Monkey.MeshVertexData.Length * sizeof (float)), 
+			GL.BufferData (BufferTarget.ArrayBuffer, (IntPtr) (Monkey.MeshVertexData.Length * sizeof (float)),
 			               Monkey.MeshVertexData, BufferUsage.StaticDraw);
 
 			GL.EnableVertexAttribArray ((int) GLKVertexAttrib.Position);
@@ -80,8 +77,7 @@ namespace GLKBaseEffectDrawingTexture
 			string path = NSBundle.MainBundle.PathForResource ("monkey", "png");
 
 			NSError error;
-			NSDictionary options = NSDictionary.FromObjectAndKey (NSNumber.FromBoolean (true),
-			                                                      GLKTextureLoader.OriginBottomLeft);
+			NSDictionary options = new NSDictionary (GLKTextureLoader.OriginBottomLeft, true);
 
 			texture = GLKTextureLoader.FromFile (path, options, out error);
 
@@ -102,7 +98,7 @@ namespace GLKBaseEffectDrawingTexture
 		{
 			float aspect = (float)Math.Abs (View.Bounds.Size.Width / View.Bounds.Size.Height);
 
-			Matrix4 projectionMatrix = 
+			Matrix4 projectionMatrix =
 				Matrix4.CreatePerspectiveFieldOfView ((float) (Math.PI * 65f / 180.0f),
 				                                      aspect, 0.1f, 100.0f);
 
@@ -116,7 +112,7 @@ namespace GLKBaseEffectDrawingTexture
 			rotation += (float) TimeSinceLastUpdate * 0.5f;
 		}
 
-		public void Draw (object sender, GLKViewDrawEventArgs args)
+		public override void DrawInRect (GLKView view, CGRect rect)
 		{
 			GL.ClearColor (0.65f, 0.65f, 0.65f, 1f);
 			GL.Clear (ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);

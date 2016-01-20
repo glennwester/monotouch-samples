@@ -1,15 +1,15 @@
 using System;
-using MonoTouch.CoreFoundation;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using CoreFoundation;
+using Foundation;
+using UIKit;
 
 namespace AUSoundTriggeredPlayingSoundMemoryBased
 {
     public partial class MainView : UIViewController
     {
-        ExtAudioBufferPlayer _player;
-        NSTimer _timer;
-        bool _isTimerAvailable;
+        ExtAudioBufferPlayer player;
+        NSTimer timer;
+        bool isTimerAvailable;
 
         public MainView() : base("MainView", null)
         {
@@ -18,36 +18,33 @@ namespace AUSoundTriggeredPlayingSoundMemoryBased
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
-     
+
             var url = CFUrl.FromFile("loop_stereo.aif");
-            _player = new ExtAudioBufferPlayer(url);
+            player = new ExtAudioBufferPlayer(url);
 
             // setting audio session
-            _slider.ValueChanged += new EventHandler(_slider_ValueChanged);
+            _slider.ValueChanged += OnSliderValueChanged;
+            _slider.MaxValue = player.TotalFrames;
 
-            _slider.MaxValue = _player.TotalFrames;
+            isTimerAvailable = true;
+			timer = NSTimer.CreateRepeatingTimer (TimeSpan.FromMilliseconds (100),
+				_ => {
+					if (isTimerAvailable) {
+						long pos = player.CurrentFrame;
+						_slider.Value = pos;
+						_signalLevelLabel.Text = player.SignalLevel.ToString ("0.00E0");
+					}
+				}
+			);
 
-            _isTimerAvailable = true;
-            _timer = NSTimer.CreateRepeatingTimer(TimeSpan.FromMilliseconds(100),
-                delegate
-                {
-                    if (_isTimerAvailable)
-                    {
-                        long pos = _player.CurrentPosition;
-                        _slider.Value = pos;
-                        _signalLevelLabel.Text = _player.SignalLevel.ToString("0.00E0");
-                    }                    
-                }
-            );
-
-            NSRunLoop.Current.AddTimer(_timer, NSRunLoopMode.Default);            
+            NSRunLoop.Current.AddTimer(timer, NSRunLoopMode.Default);
         }
 
-        void _slider_ValueChanged(object sender, EventArgs e)
+        void OnSliderValueChanged(object sender, EventArgs e)
         {
-            _isTimerAvailable = false; 
-            _player.CurrentPosition = (long)_slider.Value;     
-            _isTimerAvailable = true;             
+            isTimerAvailable = false;
+            player.CurrentFrame = (long)_slider.Value;
+            isTimerAvailable = true;
         }
     }
 }

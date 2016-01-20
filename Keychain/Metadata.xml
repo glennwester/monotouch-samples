@@ -5,4 +5,5 @@
 	<Level>Advanced</Level>
 	<Tags>Platform Features</Tags>
 	<Gallery>true</Gallery>
+	<Brief>Using Apple's keychain storage for storing information securely within an application.</Brief>
 </SampleMetadata>

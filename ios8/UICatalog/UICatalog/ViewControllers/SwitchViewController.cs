@@ -1,17 +1,18 @@
 using System;
 
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 
 namespace UICatalog
 {
-	public partial class SwitchViewController : UITableViewController
+	[Register ("SwitchViewController")]
+	public class SwitchViewController : UITableViewController
 	{
 		[Outlet]
-		private UISwitch DefaultSwitch { get; set; }
+		UISwitch DefaultSwitch { get; set; }
 
 		[Outlet]
-		private UISwitch TintedSwitch { get; set; }
+		UISwitch TintedSwitch { get; set; }
 
 		public SwitchViewController (IntPtr handle)
 			: base (handle)
@@ -26,13 +27,13 @@ namespace UICatalog
 			ConfigureTintedSwitch ();
 		}
 
-		private void ConfigureDefaultSwitch()
+		void ConfigureDefaultSwitch ()
 		{
-			DefaultSwitch.SetState (true, animated: false);
+			DefaultSwitch.SetState (true, false);
 			DefaultSwitch.ValueChanged += OnSwitchValueChange;
 		}
 
-		private void ConfigureTintedSwitch()
+		void ConfigureTintedSwitch ()
 		{
 			TintedSwitch.TintColor = ApplicationColors.Blue;
 			TintedSwitch.OnTintColor = ApplicationColors.Green;
@@ -41,7 +42,7 @@ namespace UICatalog
 			TintedSwitch.ValueChanged += OnSwitchValueChange;
 		}
 
-		private void OnSwitchValueChange(object sender, EventArgs e)
+		void OnSwitchValueChange (object sender, EventArgs e)
 		{
 			Console.WriteLine ("A switch changed its value: {0}.", sender);
 		}

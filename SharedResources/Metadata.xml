@@ -5,4 +5,5 @@
 	<Level>Intermediate</Level>
 	<Tags>Device Features</Tags>
 	<Gallery>true</Gallery>
+	<Brief>Demonstrates how to work with various iOS resources.</Brief>
 </SampleMetadata>

@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>MinimumOSVersion</key>
-	<string>3.0</string>
+	<string>6.0</string>
 	<key>NSMainNibFile</key>
 	<string>MainWindow</string>
 	<key>CFBundleIconFiles</key>
@@ -28,5 +28,7 @@
 	<array>
 		<integer>1</integer>
 	</array>
+	<key>CFBundleIdentifier</key>
+	<string>com.xamarin.QuartzSample</string>
 </dict>
 </plist>

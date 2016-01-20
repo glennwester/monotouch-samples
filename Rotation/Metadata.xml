@@ -5,4 +5,5 @@
 	<Level>Beginning</Level>
 	<Tags>Device Features, User Interface</Tags>
 	<Gallery>true</Gallery>
+	<Brief>Shows how to handle user-interface layout changes when device is rotated.</Brief>
 </SampleMetadata>

@@ -6,4 +6,5 @@
 	<Tags>Games</Tags>
     <LicenseRequirement>Indie</LicenseRequirement>
 	<Gallery>true</Gallery>
+	<Brief>Demonstrates the work with Achievements and Leaderboards using GameKit APIs.</Brief>
 </SampleMetadata>

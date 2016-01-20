@@ -1,27 +1,20 @@
 using System;
-using MonoTouch.UIKit;
+
 using OpenTK;
-using MonoTouch.OpenGLES;
-using MonoTouch.GLKit;
-using MonoTouch;
+using OpenGLES;
+using GLKit;
 using OpenTK.Graphics.ES20;
-using MonoTouch.CoreGraphics;
-using System.Drawing;
+using CoreGraphics;
 
 namespace GLKBaseEffectDrawing
 {
-	public class MCViewController : GLKViewController
+	public class MCViewController : GLKViewController, IGLKViewDelegate
 	{
 		float rotation;
 		uint vertexArray;
 		uint vertexBuffer;
 		EAGLContext context;
 		GLKBaseEffect effect;
-
-		public MCViewController ()
-		{
-
-		}
 
 		public override void ViewDidLoad ()
 		{
@@ -32,10 +25,10 @@ namespace GLKBaseEffectDrawing
 			if (context == null)
 				Console.WriteLine ("Failed to create ES context");
 
-			GLKView view = View as GLKView;
+			var view = (GLKView)View;
 			view.Context = context;
 			view.DrawableDepthFormat = GLKViewDrawableDepthFormat.Format24;
-			view.DrawInRect += Draw;
+			view.Delegate = this;
 
 			setupGL ();
 		}
@@ -70,7 +63,7 @@ namespace GLKBaseEffectDrawing
 
 			GL.GenBuffers (1, out vertexBuffer);
 			GL.BindBuffer (BufferTarget.ArrayBuffer, vertexBuffer);
-			GL.BufferData (BufferTarget.ArrayBuffer, (IntPtr)(Monkey.MeshVertexData.Length * sizeof(float)), 
+			GL.BufferData (BufferTarget.ArrayBuffer, (IntPtr)(Monkey.MeshVertexData.Length * sizeof(float)),
 			               Monkey.MeshVertexData, BufferUsage.StaticDraw);
 
 			GL.EnableVertexAttribArray ((int) GLKVertexAttrib.Position);
@@ -88,7 +81,7 @@ namespace GLKBaseEffectDrawing
 		{
 			float aspect = (float)Math.Abs (View.Bounds.Size.Width / View.Bounds.Size.Height);
 
-			Matrix4 projectionMatrix = 
+			Matrix4 projectionMatrix =
 				Matrix4.CreatePerspectiveFieldOfView ((float) (Math.PI * 65f / 180.0f),
 			                                       aspect, 0.1f, 100.0f);
 
@@ -102,7 +95,7 @@ namespace GLKBaseEffectDrawing
 			rotation += (float)TimeSinceLastUpdate * 0.5f;
 		}
 
-		public void Draw (object sender, GLKViewDrawEventArgs args)
+		public void DrawInRect (GLKView view, CGRect rect)
 		{
 			GL.ClearColor (0.65f, 0.65f, 0.65f, 1f);
 			GL.Clear (ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);

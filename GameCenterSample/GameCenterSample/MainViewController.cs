@@ -1,22 +1,22 @@
 using System;
-using System.Drawing;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-using MonoTouch.GameKit;
+using CoreGraphics;
+using Foundation;
+using UIKit;
+using GameKit;
 
 namespace GameCenterSample
 {
 	public partial class MainViewController : UIViewController
 	{
 
-		public GKNotificationHandler authenticatedHandler;
+		public Action<NSError> authenticatedHandler;
 		public PlayerModel player;
 		string currentPlayerID;
 		int achievementsPercentageComplete = 0;
 
 		public MainViewController () : base ("MainViewController", null)
 		{
-			authenticatedHandler = new GKNotificationHandler (delegate(NSError error) {
+			authenticatedHandler = new Action<NSError> ((error) => {
 				if (GKLocalPlayer.LocalPlayer.Authenticated) {
 					//Switching Users
 					if(currentPlayerID != null || currentPlayerID != GKLocalPlayer.LocalPlayer.PlayerID)
@@ -32,7 +32,6 @@ namespace GameCenterSample
 						GKLocalPlayer.LocalPlayer.Authenticate (authenticatedHandler);
 					};
 					alert.Show ();
-
 				}
 			});
 		}
@@ -41,7 +40,7 @@ namespace GameCenterSample
 		{
 			// Releases the view if it doesn't have a superview.
 			base.DidReceiveMemoryWarning ();
-			
+
 			// Release any cached data, images, etc that aren't in use.
 		}
 
@@ -71,9 +70,6 @@ namespace GameCenterSample
 			return (toInterfaceOrientation != UIInterfaceOrientation.PortraitUpsideDown);
 		}
 
-
-
-
 		void resetAchievementsButtonHandleTouchUpInside (object sender, EventArgs e)
 		{
 			if (!GKLocalPlayer.LocalPlayer.Authenticated) {
@@ -93,8 +89,6 @@ namespace GameCenterSample
 			}
 
 			//Create the achievement we want to submit.
-			NSString identifier = new NSString ("com.appledts.GameCenterSampleApps.achievement");
-
 			GKAchievement achievement = new GKAchievement ("com.appledts.GameCenterSampleApps.achievement");
 
 			achievementsPercentageComplete += 25;
@@ -103,8 +97,6 @@ namespace GameCenterSample
 			player.submitAchievement (achievement);
 		}
 
-
-
 		void submitScoreHandleTouchUpInside (object sender, EventArgs e)
 		{
 			if (!GKLocalPlayer.LocalPlayer.Authenticated) {
@@ -112,7 +104,6 @@ namespace GameCenterSample
 				GKLocalPlayer.LocalPlayer.Authenticate (authenticatedHandler);
 				return;
 			}
-
 
 			GKScore submitScore = new GKScore ("leaderboard");
 			submitScore.Init ();
@@ -144,7 +135,6 @@ namespace GameCenterSample
 			this.PresentViewController (leaderboardViewController, true, null);
 		}
 
-
 		void showAchievementsHandleTouchUpInside (object sender, EventArgs e)
 		{
 
@@ -159,7 +149,6 @@ namespace GameCenterSample
 			};
 			this.PresentViewController(achievementViewController, true, null);
 		}
-
 
 	}
 }

@@ -1,11 +1,11 @@
 using System;
-using MonoTouch.AVFoundation;
-using MonoTouch.Foundation;
+using AVFoundation;
+using Foundation;
 using System.Collections.Generic;
-using MonoTouch.UIKit;
-using MonoTouch.CoreFoundation;
+using UIKit;
+using CoreFoundation;
 using System.Linq;
-using System.Drawing;
+using CoreGraphics;
 
 namespace QRchestra
 {
@@ -15,23 +15,18 @@ namespace QRchestra
 
 		public AVCaptureSession CaptureSession { get; set; }
 		public List<AVMetadataObject> Barcodes { get; set; }
-		
+
 		DispatchQueue delegateCallbackQueue;
 		DispatchQueue sessionQueue;
 
-		List<double> previousSecondTimestamps;
-
 		AVCaptureDeviceInput videoInput;
 		AVCaptureDevice videoDevice;
-		AVCaptureConnection audioConnection;
-		AVCaptureConnection videoConnection;
 
 		bool running;
-		bool startCaptureSessionOnEnteringForeground;
 
 		NSObject applicationWillEnterForegroundNotificationObserver;
 
-		int pipelineRunningTask;
+		nint pipelineRunningTask;
 
 		AVCaptureMetadataOutput metadataOutput;
 
@@ -39,7 +34,6 @@ namespace QRchestra
 
 		public SessionManager ()
 		{
-			previousSecondTimestamps = new List<double> ();
 			sessionQueue = new DispatchQueue ("com.apple.sample.sessionmanager.capture");
 			pipelineRunningTask = 0;
 		}
@@ -51,7 +45,7 @@ namespace QRchestra
 					setupCaptureSession ();
 					CaptureSession.StartRunning ();
 					running = true;
-					metadataOutput.MetadataObjectTypes = new [] { AVMetadataObject.TypeQRCode };
+					metadataOutput.MetadataObjectTypes = AVMetadataObjectType.QRCode;
 				} catch (Exception e) {
 					Console.WriteLine (e.Message);
 				}
@@ -80,11 +74,11 @@ namespace QRchestra
 
 			NSNotificationCenter.DefaultCenter.AddObserver (null, captureSessionNotification, CaptureSession);
 
-			applicationWillEnterForegroundNotificationObserver = 
+			applicationWillEnterForegroundNotificationObserver =
 				NSNotificationCenter.DefaultCenter.AddObserver (UIApplication.WillEnterForegroundNotification.ToString (),
 			                                                    UIApplication.SharedApplication,
 					NSOperationQueue.CurrentQueue, delegate(NSNotification notification) {
-				applicationWillEnterForeground ();                                          	
+				applicationWillEnterForeground ();
 			});
 
 			videoDevice = AVCaptureDevice.DefaultDeviceWithMediaType (AVMediaType.Video);
@@ -133,9 +127,6 @@ namespace QRchestra
 					NSError error = (NSError)notification.UserInfo [AVCaptureSession.ErrorKey];
 					if (error.Code == (int)AVError.DeviceIsNotAvailableInBackground) {
 						Console.WriteLine ("Device not available in background");
-
-						if (running)
-							startCaptureSessionOnEnteringForeground = true;
 					} else if (error.Code == (int)AVError.MediaServicesWereReset)
 						Console.WriteLine ("Media services were reset");
 					else
@@ -168,7 +159,6 @@ namespace QRchestra
 		void applicationWillEnterForeground ()
 		{
 			sessionQueue.DispatchSync (delegate {
-				startCaptureSessionOnEnteringForeground = false;
 				if (running)
 					CaptureSession.StartRunning ();
 			});
@@ -192,7 +182,7 @@ namespace QRchestra
 			pipelineRunningTask = 0;
 		}
 
-		public void DidOutputMetadataObjects (AVCaptureOutput captureOutput, 
+		public void DidOutputMetadataObjects (AVCaptureOutput captureOutput,
 		                               AVMetadataObject[] metadataObjects,
 		                               AVCaptureConnection connection)
 		{
@@ -203,9 +193,9 @@ namespace QRchestra
 			get {
 				AVCaptureDevice device = videoInput.Device;
 
-				return (device.IsFocusModeSupported (AVCaptureFocusMode.ModeLocked) ||
-					device.IsFocusModeSupported (AVCaptureFocusMode.ModeAutoFocus) ||
-					device.IsFocusModeSupported (AVCaptureFocusMode.ModeContinuousAutoFocus));
+				return (device.IsFocusModeSupported (AVCaptureFocusMode.Locked) ||
+					device.IsFocusModeSupported (AVCaptureFocusMode.AutoFocus) ||
+					device.IsFocusModeSupported (AVCaptureFocusMode.ContinuousAutoFocus));
 			}
 		}
 
@@ -256,35 +246,35 @@ namespace QRchestra
 			}
 		}
 
-		public void AutoFocus (PointF point)
+		public void AutoFocus (CGPoint point)
 		{
 			AVCaptureDevice device = videoInput.Device;
 
-			if (device.FocusPointOfInterestSupported && device.IsFocusModeSupported (AVCaptureFocusMode.ModeAutoFocus)) {
+			if (device.FocusPointOfInterestSupported && device.IsFocusModeSupported (AVCaptureFocusMode.AutoFocus)) {
 				NSError error;
 				if (device.LockForConfiguration (out error)) {
 					device.FocusPointOfInterest = point;
-					device.FocusMode = AVCaptureFocusMode.ModeAutoFocus;
+					device.FocusMode = AVCaptureFocusMode.AutoFocus;
 					device.UnlockForConfiguration ();
 				}
 			}
 		}
 
-		void ContinuousFocus (PointF point)
+		void ContinuousFocus (CGPoint point)
 		{
 			AVCaptureDevice device = videoInput.Device;
 
-			if (device.FocusPointOfInterestSupported && device.IsFocusModeSupported (AVCaptureFocusMode.ModeContinuousAutoFocus)) {
+			if (device.FocusPointOfInterestSupported && device.IsFocusModeSupported (AVCaptureFocusMode.ContinuousAutoFocus)) {
 				NSError error;
 				if (device.LockForConfiguration (out error)) {
 					device.FocusPointOfInterest = point;
-					device.FocusMode = AVCaptureFocusMode.ModeContinuousAutoFocus;
+					device.FocusMode = AVCaptureFocusMode.ContinuousAutoFocus;
 					device.UnlockForConfiguration ();
 				}
 			}
 		}
 
-		public void Expose (PointF point)
+		public void Expose (CGPoint point)
 		{
 			AVCaptureDevice device = videoInput.Device;
 
@@ -301,7 +291,7 @@ namespace QRchestra
 		class MetadataObjectsDelegate : AVCaptureMetadataOutputObjectsDelegate
 		{
 			public Action<AVCaptureMetadataOutput, AVMetadataObject[], AVCaptureConnection> DidOutputMetadataObjectsAction;
-		
+
 			public override void DidOutputMetadataObjects (AVCaptureMetadataOutput captureOutput, AVMetadataObject[] metadataObjects, AVCaptureConnection connection)
 			{
 				if (DidOutputMetadataObjectsAction != null)

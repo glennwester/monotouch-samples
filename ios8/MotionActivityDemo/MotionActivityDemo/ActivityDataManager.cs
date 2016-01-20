@@ -1,15 +1,16 @@
 ﻿using System;
-using MonoTouch.Foundation;
+using Foundation;
 using System.Collections.Generic;
-using MonoTouch.CoreMotion;
-using MonoTouch.CoreFoundation;
-using MonoTouch.UIKit;
+using CoreMotion;
+using CoreFoundation;
+using UIKit;
 using System.Threading.Tasks;
 using System.Linq;
 
 namespace MotionActivityDemo
 {
-	public enum ActivityType {
+	public enum ActivityType
+	{
 		Walking,
 		Running,
 		Driving,
@@ -27,6 +28,7 @@ namespace MotionActivityDemo
 		public int StepCounts;
 
 		public List<SignificantActivity> significantActivities;
+
 		public List<SignificantActivity> SignificantActivities {
 			get {
 				SignificantActivity[] copy = new SignificantActivity[significantActivities.Count];
@@ -38,7 +40,6 @@ namespace MotionActivityDemo
 			}
 		}
 
-//		Action queryCompletionHandler;
 		CMPedometer pedometer;
 		CMMotionActivityManager motionActivityMgr;
 
@@ -122,7 +123,7 @@ namespace MotionActivityDemo
 
 			// Ignore all low confidence activities.
 			for (int i = 0; i < filteredActivities.Count;) {
-				CMMotionActivity activity = filteredActivities[i];
+				CMMotionActivity activity = filteredActivities [i];
 				if (activity.Confidence == CMMotionActivityConfidence.Low) {
 					filteredActivities.RemoveAt (i);
 				} else {
@@ -133,7 +134,7 @@ namespace MotionActivityDemo
 			// Skip all unclassified activities if their duration is smaller than
 			// some threshold.  This has the effect of coalescing the remaining med + high
 			// confidence activies together.
-			for (int i = 0; i < filteredActivities.Count - 1;){
+			for (int i = 0; i < filteredActivities.Count - 1;) {
 				CMMotionActivity activity = filteredActivities [i];
 				CMMotionActivity nextActivity = filteredActivities [i + 1];
 
@@ -152,8 +153,8 @@ namespace MotionActivityDemo
 				CMMotionActivity activity = filteredActivities [i];
 
 				if ((prevActivity.Walking && activity.Walking) ||
-					(prevActivity.Running && activity.Running) ||
-					(prevActivity.Automotive && activity.Automotive)) {
+				    (prevActivity.Running && activity.Running) ||
+				    (prevActivity.Automotive && activity.Automotive)) {
 					filteredActivities.RemoveAt (i);
 				} else {
 					++i;
@@ -170,12 +171,12 @@ namespace MotionActivityDemo
 				if (!activity.Walking && !activity.Running && !activity.Automotive)
 					continue;
 
-				var significantActivity = new SignificantActivity (ActivityDataManager.ActivityToType (activity), activity.StartDate, nextActivity.StartDate);
+				var significantActivity = new SignificantActivity (ActivityDataManager.ActivityToType (activity), (DateTime)activity.StartDate, (DateTime)nextActivity.StartDate);
 
 				try {
 					var pedometerData = await pedometer.QueryPedometerDataAsync (significantActivity.StartDate, significantActivity.EndDate);
 
-					significantActivity.StepCounts = pedometerData.NumberOfSteps.IntValue;
+					significantActivity.StepCounts = pedometerData.NumberOfSteps.Int32Value;
 				} catch {
 					Console.WriteLine ("Error, unable to retrieve step counts for range {0}, {1}", significantActivity.StartDate.SecondsSinceReferenceDate, significantActivity.EndDate.SecondsSinceReferenceDate);
 				}
@@ -187,6 +188,7 @@ namespace MotionActivityDemo
 		}
 
 		#region Utility functions
+
 		public static ActivityType ActivityToType (CMMotionActivity activity)
 		{
 			if (activity.Walking)
@@ -220,10 +222,13 @@ namespace MotionActivityDemo
 				return "Unclassified";
 			}
 		}
+
 		#endregion
 
 		#region SampleCodeWorkspaceFinished
+
 		static bool? available = null;
+
 		public static bool CheckAvailability ()
 		{
 			if (available != null)
@@ -242,7 +247,7 @@ namespace MotionActivityDemo
 
 			return (bool)available;
 		}
-			
+
 		void initMotionActivity ()
 		{
 			motionActivityMgr = new CMMotionActivityManager ();
@@ -256,7 +261,7 @@ namespace MotionActivityDemo
 			try {
 				await pedometer.QueryPedometerDataAsync (now, now);
 				return true;
-			} catch (Exception e) {
+			} catch (Exception) {
 				return false;
 			}
 		}
@@ -270,17 +275,17 @@ namespace MotionActivityDemo
 
 				var pedometerData = await pedometer.QueryPedometerDataAsync (startDate, endDate);
 
-				StepCounts = pedometerData.NumberOfSteps.IntValue;
+				StepCounts = pedometerData.NumberOfSteps.Int32Value;
 			} catch (Exception e) {
 				Console.WriteLine (e.Message);
 			}
 		}
-	
+
 		public void StartStepUpdates (Action<int> handler)
 		{
 			pedometer.StartPedometerUpdates (NSDate.Now, ((pedometerData, error) => {
 				DispatchQueue.MainQueue.DispatchAsync (() => {
-					handler (pedometerData.NumberOfSteps.IntValue);
+					handler (pedometerData.NumberOfSteps.Int32Value);
 				});
 			}));
 		}
@@ -301,6 +306,7 @@ namespace MotionActivityDemo
 		{
 			motionActivityMgr.StopActivityUpdates ();
 		}
+
 		#endregion
 	}
 
@@ -314,8 +320,8 @@ namespace MotionActivityDemo
 		public SignificantActivity (ActivityType type, DateTime startDate, DateTime endDate)
 		{
 			ActivityType = type;
-			StartDate = startDate;
-			EndDate = endDate;
+			StartDate = (NSDate)startDate;
+			EndDate = (NSDate)endDate;
 			StepCounts = 0;
 		}
 	}

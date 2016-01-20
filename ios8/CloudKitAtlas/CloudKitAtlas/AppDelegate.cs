@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 
 namespace CloudKitAtlas
 {
@@ -18,7 +18,7 @@ namespace CloudKitAtlas
 			get;
 			set;
 		}
-	
+
 		public override bool FinishedLaunching (UIApplication application, NSDictionary launchOptions)
 		{
 			var notificationSettings = UIUserNotificationSettings.GetSettingsForTypes (UIUserNotificationType.Alert, null);

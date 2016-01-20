@@ -1,7 +1,7 @@
 using System;
-using System.Drawing;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+
+using Foundation;
+using UIKit;
 
 namespace SimpleBackgroundTransfer {
 
@@ -56,7 +56,7 @@ namespace SimpleBackgroundTransfer {
 		public NSUrlSession InitBackgroundSession ()
 		{
 			Console.WriteLine ("InitBackgroundSession");
-			using (var configuration = NSUrlSessionConfiguration.BackgroundSessionConfiguration (Identifier)) {
+			using (var configuration = NSUrlSessionConfiguration.CreateBackgroundSessionConfiguration (Identifier)) {
 				return NSUrlSession.FromConfiguration (configuration, new UrlSessionDelegate (this), null);
 			}
 		}
@@ -144,12 +144,14 @@ namespace SimpleBackgroundTransfer {
 
 		public override void DidFinishEventsForBackgroundSession (NSUrlSession session)
 		{
-			AppDelegate appDelegate = UIApplication.SharedApplication.Delegate as AppDelegate;
-			var handler = appDelegate.BackgroundSessionCompletionHandler;
-			if (handler != null) {
-				appDelegate.BackgroundSessionCompletionHandler = null;
-				handler ();
+			using (AppDelegate appDelegate = UIApplication.SharedApplication.Delegate as AppDelegate) {
+				var handler = appDelegate.BackgroundSessionCompletionHandler;
+				if (handler != null) {
+					appDelegate.BackgroundSessionCompletionHandler = null;
+					handler();
+				}
 			}
+
 			Console.WriteLine ("All tasks are finished");
 		}
 	}
